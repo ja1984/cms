@@ -17,11 +17,13 @@
         </div>
       </div>
     </div>
-    <div>
-      <checkbox v-model="value.required" :checked="value.required" ref="required" @input="update(false)">Required</checkbox>
-    </div>
-    <div>
-      <input type="text" ref="tooltip" placeholder="Tooltip" :value="value.tooltip" @input="update(false)">
+    <div class="row row-center-vertically">
+      <div class="column column-wrap">
+        <checkbox v-model="value.required" :checked="value.required" ref="required" @input="update(false)">Required</checkbox>
+      </div>
+      <div class="column column-wrap">
+        <input type="text" ref="tooltip" placeholder="Tooltip" :value="value.tooltip" @input="update(false)">
+      </div>
     </div>
   </div>
 </template>
@@ -88,5 +90,4 @@ export default {
 .field:hover .field-tools {
   opacity: 1;
 }
-
 </style>

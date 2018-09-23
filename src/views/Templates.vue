@@ -1,7 +1,14 @@
 <template>
   <div class="container">
+    <h1 class="page-title">Templates</h1>
     <div v-for="template in templates" :key="template.id">
-      <router-link :to="{name: 'edittemplate', params: {id: template.id}}">{{template.name}}</router-link>
+      <router-link :to="{name: 'createpagefromtemplate', params: {id: template.id}}">
+        <div>
+          {{template.name}} {{template.fields.length}}
+
+        </div>
+
+      </router-link>
     </div>
     <div class="card">
       <div class="card-header row">

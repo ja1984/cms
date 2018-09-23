@@ -9,6 +9,7 @@ const state = {
 // getters
 const getters = {
   all: state => state.templates,
+  byId: state => id => state.templates.find(t => t.id === id),
 };
 
 // actions

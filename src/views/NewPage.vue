@@ -14,6 +14,11 @@
                   <input type="text" v-model="slug" v-else>
                 </template>
               </div>
+              <div class="column">
+                <select v-model="selectedTemplate">
+                  <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -22,11 +27,7 @@
           </ul>
 
           <section v-show="selectedTab === 'Editor'">
-            <select v-model="selectedTemplate">
-              <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
-            </select>
-
-            <div class="fields" v-if="selectedTemplate">
+            <div class="fields">
               <Field v-for="field in fields" :key="field.id" :data="field"></Field>
             </div>
           </section>
@@ -34,7 +35,7 @@
             <h1>{{name}}</h1>
             <p class="slug">
               <span class="dimmed">{{baseUrl}}</span>{{slug}}</p>
-            <div class="fields" v-if="selectedTemplate">
+            <div class="fields">
               <div class="field-preview" v-for="field in fields" :key="field.id">
                 <h4>{{field.name}}</h4>
                 <div v-html="field.value"></div>
@@ -90,6 +91,13 @@ export default {
       editSlug: false,
     };
   },
+  mounted() {
+    const template = this.$store.getters['template/byId'](this.$route.params.id);
+    this.selectedTemplate = template;
+    // if (template) {
+    //   this.setup(template);
+    // }
+  },
   computed: {
     ...mapGetters({
       templates: 'template/all',
@@ -100,7 +108,7 @@ export default {
     pagePreview() {
       const fields = {};
       this.fields.forEach((field) => {
-        fields[field.name] = field.value;
+        fields[field.slug] = field.value;
       });
       const page = {
         name: this.name,
@@ -121,6 +129,21 @@ export default {
     },
   },
   methods: {
+    setup(template) {
+      this.fields = [];
+
+      template.fields.forEach((field) => {
+        this.fields.push({
+          id: field.id,
+          name: field.data.name,
+          type: field.type,
+          slug: field.data.slug,
+          value: '',
+          required: field.data.required,
+          tooltip: field.data.tooltip,
+        });
+      });
+    },
     slugify(input) {
       return input.toString().toLowerCase()
         .replace(/\s+/g, '-')
@@ -155,6 +178,7 @@ export default {
           id: field.id,
           name: field.data.name,
           type: field.type,
+          slug: field.data.slug,
           value: '',
           required: field.data.required,
           tooltip: field.data.tooltip,
