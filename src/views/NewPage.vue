@@ -14,11 +14,6 @@
                   <input type="text" v-model="slug" v-else>
                 </template>
               </div>
-              <div class="column">
-                <select v-model="selectedTemplate">
-                  <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
-                </select>
-              </div>
             </div>
           </div>
 
@@ -52,9 +47,15 @@
       </div>
       <div class="column column-wrap">
         <aside>
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Information</span>
+
+          <div class="">
+            <div class="card-body">
+              <label>
+                Template
+                <select v-model="selectedTemplate">
+                  <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
+                </select>
+              </label>
             </div>
             <div class="card-body">
             </div>
@@ -193,7 +194,7 @@ export default {
 main {
 }
 aside {
-  width: 25rem;
+  width: 30rem;
 }
 
 .json-preview {

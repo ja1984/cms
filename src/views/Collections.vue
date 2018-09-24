@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="page-title">Pages</h1>
+    <h1 class="page-title">Collections</h1>
     <div class="card">
       <div class="card-header row">
         <div class="column">
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'Templates',
+  name: 'Collections',
 };
 </script>
 
