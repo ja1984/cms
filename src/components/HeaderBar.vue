@@ -3,7 +3,9 @@
     <div class="container">
 
       <div class="row row-center-vertically">
-        <div class="column"></div>
+        <div class="column column-wrap">
+          <a href="/" class="logo">c<i></i>gCMS</a>
+        </div>
         <div class="column">
           <nav>
             <li>
@@ -53,6 +55,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import (reference) '~@/styles/site.less';
 @headerbarHeight: 7rem;
 
 .headerbar {
@@ -73,7 +76,8 @@ export default {
   }
 }
 
-.container, .row {
+.container,
+.row {
   height: 100%;
 }
 
@@ -92,6 +96,33 @@ a {
   &:hover {
     opacity: 1;
     color: #333;
+  }
+}
+
+.logo {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 4rem;
+  color: #555;
+  opacity: 1;
+
+  i {
+    font-size: 2.1rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: url('~@/assets/cog-logo.svg');
+    display: inline-block;
+    background-size: contain;
+    margin-bottom: -0.2rem;
+    background-repeat: no-repeat;
+    margin-left: 0.1rem;
+    transition: all ease 2.5s;
+  }
+
+  &:hover {
+    color: #555;
+    i {
+      transform: rotate(360deg);
+    }
   }
 }
 </style>

@@ -138,12 +138,13 @@ export default {
 
       template.fields.forEach((field) => {
         console.log(field.type, field.type === 'boolean');
+        const value = field.type === 'boolean' ? false : null;
         this.fields.push({
           id: field.id,
           name: field.data.name,
           type: field.type,
           slug: field.data.slug,
-          value: field.type === 'boolean' ? false : '',
+          value,
           required: field.data.required,
           tooltip: field.data.tooltip,
         });
