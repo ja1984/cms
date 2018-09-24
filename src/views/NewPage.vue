@@ -1,5 +1,6 @@
 <template>
   <div class="new-page container">
+    <h1 class="page-title">New page</h1>
     <div class="row">
       <div class="column">
         <main>
@@ -50,12 +51,14 @@
 
           <div class="">
             <div class="card-body">
-              <label>
-                Template
-                <select v-model="selectedTemplate">
-                  <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
-                </select>
-              </label>
+              <div class="form-row">
+                <label>
+                  Template
+                  <select v-model="selectedTemplate">
+                    <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
+                  </select>
+                </label>
+              </div>
             </div>
             <div class="card-body">
             </div>
@@ -134,12 +137,13 @@ export default {
       this.fields = [];
 
       template.fields.forEach((field) => {
+        console.log(field.type, field.type === 'boolean');
         this.fields.push({
           id: field.id,
           name: field.data.name,
           type: field.type,
           slug: field.data.slug,
-          value: '',
+          value: field.type === 'boolean' ? false : '',
           required: field.data.required,
           tooltip: field.data.tooltip,
         });
@@ -172,19 +176,20 @@ export default {
       this.slug = `/${this.slugify(name)}/`;
     },
     selectedTemplate(template) {
-      this.fields = [];
+      this.setup(template);
+      // this.fields = [];
 
-      template.fields.forEach((field) => {
-        this.fields.push({
-          id: field.id,
-          name: field.data.name,
-          type: field.type,
-          slug: field.data.slug,
-          value: '',
-          required: field.data.required,
-          tooltip: field.data.tooltip,
-        });
-      });
+      // template.fields.forEach((field) => {
+      //   this.fields.push({
+      //     id: field.id,
+      //     name: field.data.name,
+      //     type: field.type,
+      //     slug: field.data.slug,
+      //     value: '',
+      //     required: field.data.required,
+      //     tooltip: field.data.tooltip,
+      //   });
+      // });
     },
   },
 };
