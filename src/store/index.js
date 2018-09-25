@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import template from '@/store/modules/template';
 import page from '@/store/modules/page';
+import language from '@/store/modules/language';
 
 Vue.use(Vuex);
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     template,
     page,
+    language,
   },
   strict: debug,
 });
