@@ -7,6 +7,7 @@
     </ul>
 
     <section v-if="selectedTab === 'Localization'">
+      <h3 class="sub-title">Add new locale</h3>
       <form @submit.prevent="saveLanguage">
         <div class="form-row">
           <label>
@@ -26,11 +27,16 @@
       </form>
 
       <div class="site-languages">
+        <h3  class="sub-title">Your locales</h3>
         <div class="site-language row row-center-vertically" v-for="language in languages" :key="language.slug">
           <div class="column">{{language.language}}</div>
           <div class="column">{{language.slug}}</div>
           <div class="column">{{language.isDefault}}</div>
-          <div class="column"><button class="button button-error" @click="deleteLanguage(language.slug)"><i class="far fa-trash-alt"></i></button></div>
+          <div class="column column-wrap">
+            <button class="button button-error" @click="deleteLanguage(language.slug)">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -68,4 +74,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+section {
+  padding: 1rem 0;
+}
 </style>
