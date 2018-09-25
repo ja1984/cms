@@ -45,12 +45,19 @@ const actions = {
   delete({ commit }, payload) {
     commit('delete', payload);
   },
+  addKey({ commit }, payload) {
+    commit('addKey', payload);
+  },
 };
 
 // mutations
 const mutations = {
   create(state, data) {
     state.collections.push(data);
+  },
+  addKey(state, data) {
+    const collection = state.collections.find(x => x.key === data.collection);
+    collection.properties.push(data.data);
   },
 };
 

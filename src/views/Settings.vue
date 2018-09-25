@@ -50,7 +50,7 @@ export default {
   name: 'Templates',
   computed: {
     ...mapGetters({
-      languages: 'language/get',
+      languages: 'language/all',
     }),
   },
   data() {

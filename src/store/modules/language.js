@@ -8,7 +8,7 @@ const state = {
 
 // getters
 const getters = {
-  get: state => state.languages,
+  all: state => state.languages,
 };
 
 // actions
