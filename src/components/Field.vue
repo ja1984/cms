@@ -18,7 +18,7 @@
 
 import InputField from '@/components/fields/InputField.vue';
 import TextareaField from '@/components/fields/TextareaField.vue';
-import BooleanField from '@/components/fields/BooleanField.vue';
+import BooleanField from '@/components/fields/booleanfield.vue';
 import NumberField from '@/components/fields/NumberField.vue';
 import DatePickerField from '@/components/fields/DatePickerField.vue';
 
