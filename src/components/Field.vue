@@ -1,26 +1,36 @@
 <template>
   <div class="form-row">
-    <label>
-      <span>{{data.name}}
+    <!-- <span>{{data.name}}
         <div class="hastooltip" v-if="data.tooltip" :data-balloon="data.tooltip" data-balloon-pos="up">
           <i class="far fa-question-circle">
           </i>
         </div>
-      </span>
-      <input type="text" v-model="data.value" :required="data.required" v-if="data.type === 'input'">
-      <textarea type="text" v-model="data.value" :required="data.required" v-if="data.type === 'textarea'"></textarea>
-
-      <component :is="currentView">
-        <!-- component changes when vm.currentview changes! -->
-      </component>
-    </label>
+      </span> -->
+    <input-field v-model="data.value" :name="data.name" :required="data.required" v-if="data.type === 'input'"></input-field>
+    <number-field v-model="data.value" :name="data.name" :required="data.required" v-if="data.type === 'number'"></number-field>
+    <textarea-field v-model="data.value" :name="data.name" :required="data.required" v-if="data.type === 'textarea'"></textarea-field>
+    <boolean-field v-model="data.value" :required="data.required" v-if="data.type === 'boolean'">{{data.name}}</boolean-field>
+    <date-picker-field v-model="data.value" :name="data.name" :required="data.required" v-if="data.type === 'date'"></date-picker-field>
   </div>
 </template>
 
 <script>
 
+import InputField from '@/components/fields/InputField.vue';
+import TextareaField from '@/components/fields/TextareaField.vue';
+import BooleanField from '@/components/fields/booleanfield.vue';
+import NumberField from '@/components/fields/NumberField.vue';
+import DatePickerField from '@/components/fields/DatePickerField.vue';
+
 export default {
   name: 'Field',
+  components: {
+    InputField,
+    TextareaField,
+    BooleanField,
+    NumberField,
+    DatePickerField,
+  },
   props: {
     data: { type: Object },
   },

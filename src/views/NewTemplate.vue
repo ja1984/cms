@@ -143,7 +143,7 @@ li {
   padding: 0.5rem;
   cursor: pointer;
   transition: all ease 0.3s;
-  font-weight: 600;
+  // font-weight: 600;
   font-size: 1.5rem;
   display: block;
   width: 100%;
