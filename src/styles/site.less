@@ -152,7 +152,7 @@ strong {
     margin: 0 auto;
     height: 50px;
     width: 50px;
-    background: url('/static/loading.svg') no-repeat;
+    background: url('~@/assets/loading.svg') no-repeat;
     background-size: contain;
     &.loader-small {
         height: 25px;
@@ -213,11 +213,17 @@ label {
   font-size: 1.4rem;
   display: block;
   cursor: pointer;
+
+  &>span {
+    display: block;
+    margin-bottom: .75rem;
+  }
 }
 
 .page-title {
     // margin-bottom: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
+    font-size: 3.5rem;
     // border-bottom: .01rem solid rgb(229, 226, 226);
 }
 
