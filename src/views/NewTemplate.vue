@@ -37,12 +37,12 @@
                 </li>
                 <li>
                   <button class="toolbar-button" @click="addField('date')">
-                    <i class="fas fa-calendar-alt fa-fw"></i> Date</button>
+                    <i class="far fa-calendar-alt fa-fw"></i> Date</button>
                 </li>
-                <li>
+                <!-- <li>
                   <button class="toolbar-button" @click="addField('group')">
                     <i class="far fa-folder fa-fw"></i> Group</button>
-                </li>
+                </li> -->
                 <li>
                   <button class="toolbar-button" @click="addField('media')">
                     <i class="far fa-image fa-fw"></i> Media</button>

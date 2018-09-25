@@ -20,6 +20,9 @@
             <li>
               <router-link to="/collections">Collections</router-link>
             </li>
+            <li>
+              <router-link to="/settings">Settings</router-link>
+            </li>
           </nav>
         </div>
         <div class="column"></div>
