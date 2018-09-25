@@ -39,6 +39,8 @@ func main() {
 		{
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
+
+			adminGroup.POST("collection", routes.CreateCollection)
 		}
 	}
 
