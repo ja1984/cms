@@ -3,10 +3,11 @@ package main
 import (
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
-	"github.com/ja1984/cms/backend/database"
-	"github.com/ja1984/cms/backend/routes"
+	"github.com/ja1984/cogCMS/backend/database"
+	"github.com/ja1984/cogCMS/backend/routes"
 )
 
 func main() {
@@ -27,6 +28,12 @@ func main() {
 	log.Print("Redis started and pinged 🤩")
 
 	r := gin.Default()
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+
+	r.Use(cors.New(corsConfig))
+
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

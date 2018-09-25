@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ja1984/cms/backend/database"
+	"github.com/ja1984/cogCMS/backend/database"
 )
 
 const collectionPath = "collections:%s"
