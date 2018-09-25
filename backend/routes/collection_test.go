@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-redis/redis"
-	"github.com/ja1984/cms/backend/database"
+	"github.com/ja1984/cogCMS/backend/database"
 )
 
 func TestSaveCollection(t *testing.T) {
