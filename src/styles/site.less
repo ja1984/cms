@@ -198,12 +198,14 @@ input[type=checkbox] {
     vertical-align: middle;
 }
 
-input:required {
+input:required,
+.vdp-datepicker input,
+input[type=date] {
   background-image: url(~@/assets/required.svg);
   background-size: 1.7rem;
   background-repeat: no-repeat;
-  background-position: 99% center;
-  padding-right: 3.3rem;
+  background-position: 1% center;
+  padding-left: 3.3rem;
 }
 
 label {
@@ -221,11 +223,7 @@ label {
 
 .form-row {
     position: relative;
-    margin-bottom: 1.5rem;
-
-    input, select, textarea {
-      margin-top: .25rem;
-    }
+    margin-bottom: 3rem;
 }
 
 .hidden-mobile {
