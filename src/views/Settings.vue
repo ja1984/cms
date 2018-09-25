@@ -63,8 +63,7 @@ export default {
   },
   methods: {
     saveLanguage() {
-      this.$store.dispatch('language/create', { language: this.language, slug: this.slug })
-      console.log(this.language);
+      this.$store.dispatch('language/create', { language: this.language, slug: this.slug });
     },
     deleteLanguage(slug) {
       this.$store.dispatch('language/delete', { slug });
