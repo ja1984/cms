@@ -26,11 +26,11 @@
       </form>
 
       <div class="site-languages">
-        <div class="site-language row" v-for="language in languages" :key="language.slug">
+        <div class="site-language row row-center-vertically" v-for="language in languages" :key="language.slug">
           <div class="column">{{language.language}}</div>
           <div class="column">{{language.slug}}</div>
           <div class="column">{{language.isDefault}}</div>
-          <div class="column"><button @click="deleteLanguage(language.slug)"><i class="far fa-trash-alt"></i></button></div>
+          <div class="column"><button class="button button-error" @click="deleteLanguage(language.slug)"><i class="far fa-trash-alt"></i></button></div>
         </div>
       </div>
     </section>
