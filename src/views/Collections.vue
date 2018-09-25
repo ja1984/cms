@@ -1,22 +1,25 @@
 <template>
   <div class="container">
     <h1 class="page-title">Collections</h1>
-    <div class="card">
-      <div class="card-header row">
-        <div class="column">
-          <span class="card-title">Pages</span>
-        </div>
-        <div class="column column-wrap">
-          <router-link to="/pages/create" class="button button-primary">New page</router-link>
-        </div>
+
+    <div class="collections">
+      <div class="collection" v-for="collection in collections" :key="collection.key">
+        <router-link :to="{name: 'collection', params: {key: collection.key}}"> {{collection.key}}</router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Collections',
+  computed: {
+    ...mapGetters({
+      collections: 'collection/get',
+    }),
+  },
 };
 </script>
 

@@ -77,6 +77,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import Field from '@/components/Field.vue';
+import { createPage } from '@/api/page';
 
 export default {
   name: 'NewPage',
@@ -164,6 +165,23 @@ export default {
         name: this.name,
         slug: this.slug,
         fields: this.fields,
+      });
+
+      const page = {
+        id: this.id,
+        name: this.name,
+        slug: this.slug,
+        fields: this.fields,
+      };
+      createPage(page).then((response) => {
+        if (response.status === 201) {
+          this.$store.dispatch('page/create', {
+            id: this.id,
+            name: this.name,
+            slug: this.slug,
+            fields: this.fields,
+          });
+        }
       });
     },
     createId() {
