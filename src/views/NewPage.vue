@@ -174,7 +174,14 @@ export default {
         fields: this.fields,
       };
       createPage(page).then((response) => {
-        console.log(response);
+        if (response.status === 201) {
+          this.$store.dispatch('page/create', {
+            id: this.id,
+            name: this.name,
+            slug: this.slug,
+            fields: this.fields,
+          });
+        }
       });
     },
     createId() {
