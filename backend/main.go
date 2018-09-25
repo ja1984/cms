@@ -41,6 +41,9 @@ func main() {
 			adminGroup.POST("page", routes.CreatePage)
 
 			adminGroup.POST("collection", routes.CreateCollection)
+			adminGroup.GET("collections", routes.ListCollections)
+			adminGroup.GET("collection/:key", routes.GetCollection)
+
 		}
 	}
 
