@@ -43,4 +43,10 @@ func TestSaveCollection(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	err = deleteCollection(testCollection.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
 }

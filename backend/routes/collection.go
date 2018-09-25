@@ -72,6 +72,21 @@ func GetCollection(c *gin.Context) {
 	c.JSON(200, collection)
 }
 
+func DeleteCollection(c *gin.Context) {
+	key := c.Param("key")
+	err := deleteCollection(key)
+
+	if err != nil {
+		c.AbortWithError(500, err)
+	}
+
+	c.Status(200)
+}
+
+func deleteCollection(key string) error {
+	return database.REDIS.Del(fmt.Sprintf(collectionPath, key)).Err()
+}
+
 func getCollection(key string) (*Collection, error) {
 	value, err := database.REDIS.Get(key).Result()
 	if err != nil {

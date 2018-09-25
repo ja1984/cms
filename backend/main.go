@@ -43,6 +43,7 @@ func main() {
 			adminGroup.POST("collection", routes.CreateCollection)
 			adminGroup.GET("collections", routes.ListCollections)
 			adminGroup.GET("collection/:key", routes.GetCollection)
+			adminGroup.DELETE("collection/:key", routes.GetCollection)
 
 		}
 	}
