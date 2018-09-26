@@ -19,3 +19,25 @@ yarn run build
 ```
 yarn run lint
 ```
+
+
+# Backend
+
+## Setup
+
+```
+cd backend
+```
+
+```
+make up
+```
+
+```
+visit http://localhost:5000
+```
+
+view logs
+```
+make logs
+```
