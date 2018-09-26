@@ -1,0 +1,13 @@
+version: '3.6'
+
+services:
+    api:
+        image: api:latest
+        ports:
+            - 5000:5000
+        volumes:
+            - ./:/go/src/github.com/ja1984/cogCMS/backend
+    redis:
+        image: redis
+        ports:
+            - 6379
