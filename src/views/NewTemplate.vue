@@ -1,5 +1,5 @@
 <template>
-  <div class="new-template">
+  <div class="new-template page page-with-sidebar">
     <div class="container">
       <div class="row">
         <div class="column">
@@ -15,50 +15,49 @@
             <field-type v-for="field in fields" :key="field.id" v-model="field.data" :type="field.type"></field-type>
           </main>
         </div>
-        <div class="column column-wrap">
-          <aside>
-            <div class="new-field-toolbar">
-              <ul>
-                <li>
-                  <button class="toolbar-button" @click="addField('input')">
-                    <i class="fas fa-toggle-on fa-fw"></i> Text</button>
-                </li>
-                <li>
-                  <button class="toolbar-button" @click="addField('textarea')">
-                    <i class="fas fa-code fa-fw"></i> Textarea</button>
-                </li>
-                <li>
-                  <button class="toolbar-button" @click="addField('boolean')">
-                    <i class="fas fa-toggle-on fa-fw"></i> True / false</button>
-                </li>
-                <li>
-                  <button class="toolbar-button" @click="addField('number')">
-                    <i class="fas fa-hashtag"></i> Number</button>
-                </li>
-                <li>
-                  <button class="toolbar-button" @click="addField('date')">
-                    <i class="far fa-calendar-alt fa-fw"></i> Date</button>
-                </li>
-                <!-- <li>
+      </div>
+    </div>
+
+    <aside class="page-sidebar">
+      <div class="page-sidebar-body">
+        <ul>
+          <li>
+            <button class="toolbar-button" @click="addField('input')">
+              <i class="fas fa-toggle-on fa-fw"></i> Text</button>
+          </li>
+          <li>
+            <button class="toolbar-button" @click="addField('textarea')">
+              <i class="fas fa-code fa-fw"></i> Textarea</button>
+          </li>
+          <li>
+            <button class="toolbar-button" @click="addField('boolean')">
+              <i class="fas fa-toggle-on fa-fw"></i> True / false</button>
+          </li>
+          <li>
+            <button class="toolbar-button" @click="addField('number')">
+              <i class="fas fa-hashtag"></i> Number</button>
+          </li>
+          <li>
+            <button class="toolbar-button" @click="addField('date')">
+              <i class="far fa-calendar-alt fa-fw"></i> Date</button>
+          </li>
+          <!-- <li>
                   <button class="toolbar-button" @click="addField('group')">
                     <i class="far fa-folder fa-fw"></i> Group</button>
                 </li> -->
-                <li>
-                  <button class="toolbar-button" @click="addField('media')">
-                    <i class="far fa-image fa-fw"></i> Media</button>
-                </li>
-                <li></li>
-                <li></li>
-              </ul>
-            </div>
-            <div class="toolbar">
-              <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">Create template</button>
-            </div>
-          </aside>
-        </div>
+          <li>
+            <button class="toolbar-button" @click="addField('media')">
+              <i class="far fa-image fa-fw"></i> Media</button>
+          </li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="page-sidebar-footer">
+        <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">Create template</button>
 
       </div>
-    </div>
+    </aside>
   </div>
 </template>
 
@@ -124,9 +123,6 @@ export default {
   display: flex;
 }
 
-aside {
-  width: 25rem;
-}
 
 li {
   padding: 0.25rem 0;

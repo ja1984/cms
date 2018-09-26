@@ -365,6 +365,7 @@ h4 {
 .card {
     background: #fff;
     border-radius: .4rem;
+    overflow: hidden;
     box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
 
     // box-shadow: 0 8px 30px 0 rgba(42, 51, 83, 0.12);
@@ -496,4 +497,54 @@ a {
   text-align: center;
   cursor: default;
   display: inline-block;
+}
+
+.page {
+  padding-left: 24rem;
+}
+
+.page-sidebar {
+  background: #fff;
+  border-left: 0.1rem solid #e8e8e8;
+  width: 23rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+
+
+  &.page-sidebar-wide {
+    width: 35rem;
+  }
+}
+
+.page-with-sidebar {
+  padding-right: 23rem;
+  &.page-with-sidebar-slide {
+    padding-right: 0;
+  transition: all ease .3s;
+  .page-sidebar {
+    transition: all ease .3s;
+    transform: translateX(100%);
+  }
+
+  &.show {
+    .page-sidebar {
+      transform: translateX(0);
+    }
+  }
+  }
+}
+
+.page-sidebar-body {
+  flex: 1;
+
+  &.page-sidebar-body-with-padding {
+    padding: 1rem;
+  }
+}
+.page-sidebar-footer {
+  padding: 1rem;
 }
