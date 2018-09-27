@@ -44,3 +44,7 @@
 [[constraint]]
   name = "firebase.google.com/go"
   version = "3.4.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/alex-ant/envs"
