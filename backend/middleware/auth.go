@@ -22,6 +22,11 @@ func VerifyAuth() gin.HandlerFunc {
 			return
 		}
 
+		if *config.Environment == "local" && *config.DisableAuthentication {
+			c.Next()
+			return
+		}
+
 		tokenHeader := c.GetHeader("Authorization")
 
 		if tokenHeader == "" {
@@ -46,11 +51,6 @@ func VerifyAuth() gin.HandlerFunc {
 				return
 			}
 			c.Set("token", *idToken)
-			c.Next()
-			return
-		}
-
-		if *config.DisableAuthentication {
 			c.Next()
 			return
 		}
