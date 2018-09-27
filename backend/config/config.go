@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	Environment = flag.String("Environment", "local", "Current Environment")
+	Environment           = flag.String("Environment", "local", "Current Environment")
+	DisableAuthentication = flag.Bool("DisableAuthentication", true, "Disable Authentication")
 )
 
 func init() {

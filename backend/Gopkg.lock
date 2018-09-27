@@ -381,6 +381,7 @@
   analyzer-version = 1
   input-imports = [
     "firebase.google.com/go",
+    "firebase.google.com/go/auth",
     "github.com/alex-ant/envs",
     "github.com/gin-contrib/cors",
     "github.com/gin-gonic/gin",
