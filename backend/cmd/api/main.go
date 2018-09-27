@@ -25,6 +25,7 @@ func main() {
 	}
 
 	//Temp stuff just to get it building , need to figure out of we should do with credentails for firebase auth
+	// Think we will just accept all tokens :)
 	if app != nil {
 		client, err := app.Auth(ctx)
 		if err != nil {
