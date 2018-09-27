@@ -1,4 +1,5 @@
 <template>
+  <div class="page">
   <div class="container">
     <h1 class="page-title">Collections</h1>
 
@@ -7,6 +8,7 @@
         <router-link :to="{name: 'collection', params: {key: collection.key}}"> {{collection.key}}</router-link>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

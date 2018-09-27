@@ -1,4 +1,5 @@
 <template>
+  <div class="page">
   <div class="container">
     <h1 class="page-title">Settings</h1>
 
@@ -40,6 +41,7 @@
         </div>
       </div>
     </section>
+  </div>
   </div>
 </template>
 
