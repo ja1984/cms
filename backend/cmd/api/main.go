@@ -10,6 +10,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/ja1984/cogCMS/backend/config"
 	"github.com/ja1984/cogCMS/backend/database"
+	"github.com/ja1984/cogCMS/backend/middleware"
 	"github.com/ja1984/cogCMS/backend/routes"
 	"github.com/ja1984/cogCMS/backend/services"
 )
@@ -50,7 +51,7 @@ func main() {
 
 	apiGroup := r.Group("api/v1")
 	{
-		adminGroup := apiGroup.Group("admin")
+		adminGroup := apiGroup.Group("admin", middleware.VerifyAuth())
 		{
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
