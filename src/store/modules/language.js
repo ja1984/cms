@@ -3,7 +3,13 @@
 
 // initial state
 const state = {
-  languages: [],
+  languages: [
+    {
+      language: 'English',
+      slug: 'en',
+      isDefault: true,
+    },
+  ],
 };
 
 // getters

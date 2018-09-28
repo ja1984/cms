@@ -1,4 +1,5 @@
 <template>
+  <div class="page">
   <div class="container">
     <h1 class="page-title">Templates</h1>
     <div v-for="template in templates" :key="template.id">
@@ -20,6 +21,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

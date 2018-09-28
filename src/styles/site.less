@@ -223,13 +223,16 @@ label {
 .page-title {
     // margin-bottom: 1rem;
     padding-bottom: 2rem;
-    font-size: 4rem;
+    font-size: 3.5rem;
+    font-weight: 200;
     // border-bottom: .01rem solid rgb(229, 226, 226);
 }
 .sub-title {
     // margin-bottom: 1rem;
     padding: 2rem 0;
     font-size: 2.5rem;
+    font-weight: 200;
+
     // border-bottom: .01rem solid rgb(229, 226, 226);
 }
 
@@ -299,6 +302,9 @@ label {
     }
     &.row-center-vertically {
         align-items: center;
+    }
+    &.row-bottom {
+        align-items: flex-end;
     }
 }
 
@@ -547,4 +553,19 @@ a {
 }
 .page-sidebar-footer {
   padding: 1rem;
+}
+
+.table {
+  width: 100%
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  padding: .75rem;
+  border-bottom: .1rem solid #ccc;
+}
+
+td {
+  padding: .75rem;
 }

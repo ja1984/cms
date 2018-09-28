@@ -19,4 +19,7 @@ export default {
 <style lang="less">
 @import '~@/styles/site.less';
 
+.content-wrapper {
+  padding-top: 2rem;
+}
 </style>
