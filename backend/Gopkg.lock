@@ -47,6 +47,14 @@
   version = "v3.4.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:4d1f4ae811adc503efd9328f0bbd3133554e86fbb021b32de9b8ebd061911c66"
+  name = "github.com/alex-ant/envs"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ff120f8dc147f9250185cf51414c100647044505"
+
+[[projects]]
   digest = "1:2b59aca2665ff804f6606c8829eaee133ddd3aefbc841014660d961b0034f888"
   name = "github.com/gin-contrib/cors"
   packages = ["."]
@@ -135,6 +143,14 @@
   version = "v0.0.4"
 
 [[projects]]
+  digest = "1:cdb899c199f907ac9fb50495ec71212c95cb5b0e0a8ee0800da0238036091033"
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ce7b0b5c7b45a81508558cd1dba6bb1e4ddb51bb"
+  version = "v0.0.3"
+
+[[projects]]
   digest = "1:33422d238f147d247752996a26574ac48dcf472976eda7f5134015f06bf16563"
   name = "github.com/modern-go/concurrent"
   packages = ["."]
@@ -149,6 +165,14 @@
   pruneopts = "UT"
   revision = "4b7aa43c6742a2c18fdef89dd197aaae7dac7ccd"
   version = "1.0.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f611266e3ac01ab4adb6f1d67f6c1be82998d02f452faff450596658712d860b"
+  name = "github.com/olekukonko/tablewriter"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "be2c049b30ccd4d3fd795d6bf7dce74e42eeedaa"
 
 [[projects]]
   digest = "1:03aa6e485e528acb119fb32901cf99582c380225fc7d5a02758e08b180cb56c3"
@@ -357,6 +381,8 @@
   analyzer-version = 1
   input-imports = [
     "firebase.google.com/go",
+    "firebase.google.com/go/auth",
+    "github.com/alex-ant/envs",
     "github.com/gin-contrib/cors",
     "github.com/gin-gonic/gin",
     "github.com/go-redis/redis",

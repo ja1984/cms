@@ -2,36 +2,24 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	firebase "firebase.google.com/go"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+	"github.com/ja1984/cogCMS/backend/config"
 	"github.com/ja1984/cogCMS/backend/database"
+	"github.com/ja1984/cogCMS/backend/middleware"
 	"github.com/ja1984/cogCMS/backend/routes"
+	"github.com/ja1984/cogCMS/backend/services"
 )
 
 func main() {
 	log.Print("Started cms backend 😎")
 
-	var err error
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil)
-
-	if err != nil {
-		fmt.Errorf("error getting Auth client: %v", err)
-	}
-
-	//Temp stuff just to get it building , need to figure out of we should do with credentails for firebase auth
-	if app != nil {
-		client, err := app.Auth(ctx)
-		if err != nil {
-			fmt.Errorf("error getting Auth client: %v", err)
-		}
-
-		log.Print(client)
+	if *config.Environment != "local" {
+		setupFirebaseClient()
 	}
 
 	database.REDIS = redis.NewClient(&redis.Options{
@@ -40,7 +28,7 @@ func main() {
 		DB:       0,  // use default DB
 	})
 
-	err = database.REDIS.Ping().Err()
+	err := database.REDIS.Ping().Err()
 
 	if err != nil {
 		log.Fatalf("Redis errored on ping err: %v", err)
@@ -63,7 +51,7 @@ func main() {
 
 	apiGroup := r.Group("api/v1")
 	{
-		adminGroup := apiGroup.Group("admin")
+		adminGroup := apiGroup.Group("admin", middleware.VerifyAuth())
 		{
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
@@ -77,4 +65,23 @@ func main() {
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
+}
+
+func setupFirebaseClient() {
+	var err error
+	ctx := context.Background()
+	app, err := firebase.NewApp(ctx, nil)
+
+	if err != nil {
+		log.Fatalf("error getting Auth client: %v", err)
+	}
+
+	//Temp stuff just to get it building , need to figure out of we should do with credentails for firebase auth
+	// Think we will just accept all tokens :)
+	client, err := app.Auth(ctx)
+	if err != nil {
+		log.Fatalf("error getting Auth client: %v", err)
+	}
+
+	services.FirebaseClient = client
 }
