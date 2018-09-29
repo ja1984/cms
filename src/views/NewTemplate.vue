@@ -49,6 +49,10 @@
             <button class="toolbar-button" @click="addField('media')">
               <i class="far fa-image fa-fw"></i> Media</button>
           </li>
+          <li>
+            <button class="toolbar-button" @click="addField('list')">
+              <i class="far fa-image fa-fw"></i> List</button>
+          </li>
           <li></li>
           <li></li>
         </ul>
@@ -94,6 +98,7 @@ export default {
           required: false,
           tooltip: '',
           slug: '',
+          options: [],
         },
       });
     },

@@ -8,7 +8,11 @@
           <input type="text" v-show="editSlug" ref="slug" :value="value.slug" @input="update(false)">
         </div>
       </div>
-      <div class="column">{{type}}</div>
+      <div class="column">
+        {{type}}
+        <input type="text" v-for="option in options" :key="option.id" @input="update(false)" v-model="option.value">
+        <button @click="newOption">+</button>
+      </div>
       <div class="column column-wrap">
         <div class="field-tools">
           <!-- <button class="field-tools-button" @click="removeField(field.id)">
@@ -44,9 +48,17 @@ export default {
   data() {
     return {
       editSlug: false,
+      options: [],
     };
   },
   methods: {
+    newOption() {
+      this.options.push({
+        id: this.createId(),
+        value: '',
+      });
+      this.update(false);
+    },
     update(setSlug) {
       const slug = setSlug ? this.slugify(this.$refs.name.value) : this.$refs.slug.value;
       this.$emit('input', {
@@ -54,6 +66,7 @@ export default {
         required: this.value.required,
         tooltip: this.$refs.tooltip.value,
         slug,
+        options: this.options,
       });
     },
     createId() {
