@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+	"github.com/gobuffalo/packr"
 	"github.com/ja1984/cogCMS/backend/config"
 	"github.com/ja1984/cogCMS/backend/database"
 	"github.com/ja1984/cogCMS/backend/middleware"
@@ -16,6 +18,7 @@ import (
 	"github.com/ja1984/cogCMS/backend/services"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 const (
@@ -59,6 +62,8 @@ func main() {
 	}
 
 	log.Print("Database started and pinged 😎")
+
+	runDatabaseMigrations()
 
 	r := gin.Default()
 
@@ -108,4 +113,28 @@ func setupFirebaseClient() {
 	}
 
 	services.FirebaseClient = client
+}
+
+func runDatabaseMigrations() {
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		log.Fatalf("failed to connect database for migration [%v]", err)
+	}
+	defer db.Close()
+
+	migrations := &migrate.PackrMigrationSource{
+		Box: packr.NewBox("./../../db/migrations"),
+	}
+
+	migrate.SetTable("migrations")
+
+	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
+	if err != nil {
+		log.Fatalf("failed running migration [%v]", err)
+	}
+	fmt.Printf("Applied %d migrations! 😇\n", n)
 }

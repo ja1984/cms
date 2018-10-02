@@ -1,0 +1,11 @@
+development:
+    dialect: postgres
+    datasource: root:fastmysql@/email_log?parseTime=true
+    dir: db/migrations
+    table: migrations
+
+production:
+    dialect: postgres
+    datasource: dbname=myapp sslmode=disable
+    dir: migrations/postgres
+    table: migrations
