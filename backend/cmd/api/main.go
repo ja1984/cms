@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	firebase "firebase.google.com/go"
@@ -13,6 +14,16 @@ import (
 	"github.com/ja1984/cogCMS/backend/middleware"
 	"github.com/ja1984/cogCMS/backend/routes"
 	"github.com/ja1984/cogCMS/backend/services"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+)
+
+const (
+	host     = "db"
+	port     = 5432
+	user     = "postgres"
+	password = "cogCMS"
+	dbname   = "postgres"
 )
 
 func main() {
@@ -35,6 +46,19 @@ func main() {
 	}
 
 	log.Print("Redis started and pinged 🤩")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	database.SQL, err = sqlx.Connect("postgres", psqlInfo)
+
+	defer database.SQL.Close()
+
+	if err != nil {
+		log.Fatalf("Database errored on connect err: %v", err)
+	}
+
+	log.Print("Database started and pinged 😎")
 
 	r := gin.Default()
 
