@@ -1,5 +1,8 @@
 <template>
   <div class="page">
+    <header>
+      
+    </header>
     <div class="new-page container">
       <h1 class="page-title">New page</h1>
       <div class="row">
@@ -25,7 +28,12 @@
 
             <section v-show="selectedTab === 'Editor'">
               <div class="fields">
-                <Field v-for="field in fields" :key="field.id" :data="field"></Field>
+                <div v-for="field in fields" :key="field.id">
+                  <Field :data="field"></Field>
+                  <div class="child-field" v-for="childField in field.childFields" :key="childField.id">
+                    <Field :data="childField"></Field>
+                  </div>
+                </div>
               </div>
             </section>
             <section v-show="selectedTab === 'Pretty'">
@@ -67,7 +75,21 @@
               </div>
               <div class="card-footer">
                 <div>
-                  <button @click="createPage" :disabled="!canCreate" class="button button-success button-block">Create page</button>
+                  <div class="button-wrapper">
+                    <button @click="createPage(false)" :disabled="!canCreate" class="button button-success button-block button-save">Save page</button>
+                    <button @click="showPopup = !showPopup" :disabled="!canCreate" class="button button-success button-more">
+                      <i class="fas fa-caret-up"></i>
+                    </button>
+
+                    <div class="popup" :class="{'show': showPopup}">
+                      <div class="card">
+                        <div class="card-body">
+                          <button @click="createPage(true)" :disabled="!canCreate" class="button button-primary button-block button-save">Save and publish</button>
+                          <button @click="createPage(true)" :disabled="!canCreate" class="button button-warning button-block button-save">Save as draft</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,6 +120,8 @@ export default {
       tabs: ['Editor', 'Pretty', 'JSON'],
       selectedTab: 'Editor',
       editSlug: false,
+      publish: false,
+      showPopup: false,
     };
   },
   mounted() {
@@ -142,19 +166,29 @@ export default {
       this.fields = [];
 
       template.fields.forEach((field) => {
-        console.log(field.type, field.type === 'boolean');
         const value = field.type === 'boolean' ? false : null;
-        this.fields.push({
-          id: field.id,
-          name: field.data.name,
-          type: field.type,
-          slug: field.data.slug,
-          value,
-          required: field.data.required,
-          tooltip: field.data.tooltip,
-          options: field.data.options || [],
+
+        const childFields = field.data.childFields.map((childField) => {
+          const childValue = childField.type === 'boolean' ? false : null;
+          return this.createField(childField, childValue, []);
         });
+
+        this.fields.push(this.createField(field, value, childFields));
       });
+    },
+    createField(field, value, childFields) {
+      console.log(field, value, childFields);
+      return {
+        id: field.id,
+        name: field.data.name,
+        type: field.type,
+        slug: field.data.slug,
+        value,
+        required: field.data.required,
+        tooltip: field.data.tooltip,
+        options: field.data.options || [],
+        childFields,
+      };
     },
     htmlEncode(input) {
       const text = input || '';
@@ -172,12 +206,14 @@ export default {
         .replace(/^-+/, '')
         .replace(/-+$/, '');
     },
-    createPage() {
+    createPage(published) {
       this.$store.dispatch('page/create', {
         id: this.id,
         name: this.name,
         slug: this.slug,
         fields: this.fields,
+        created: new Date(),
+        published,
       });
 
       const page = {
@@ -228,6 +264,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import (reference) '~@/styles/site.less';
 main {
 }
 aside {
@@ -266,5 +303,62 @@ aside {
 
 .field-preview {
   padding: 1rem 0;
+}
+
+.child-field {
+  margin-bottom: 0.1rem;
+  padding-left: 1rem;
+  border-left: 0.3rem solid #aaa;
+}
+
+.button-wrapper {
+  display: flex;
+  position: relative;
+  .button-save {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .button-more {
+    padding: 1.28rem 1.4rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0.1rem solid darken(@success, 5%);
+  }
+}
+
+.popup {
+  width: 100%;
+  position: absolute;
+  top: -1.5rem;
+  transform: translateY(-100%);
+
+  opacity: 0;
+  visibility: hidden;
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .button {
+    margin-top: 1rem;
+
+    &:first-child {
+      margin: 0;
+    }
+  }
+
+  .card {
+    &:after {
+      content: '';
+      position: absolute;
+      border: .7rem solid #fff;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
 }
 </style>

@@ -6,13 +6,13 @@
           <main>
             <div class="form-row">
               <label>
-                Template name
+                <span class="label-text">Template name</span>
                 <input type="text" v-model="name">
               </label>
             </div>
             <div class="divider"></div>
             <strong>Fields</strong>
-            <field-type v-for="field in fields" :key="field.id" v-model="field.data" :type="field.type"></field-type>
+            <field-type v-for="field in fields" @setAddTo="setAddTo(field)" :key="field.id" v-model="field.data" :type="field.type"></field-type>
           </main>
         </div>
       </div>
@@ -20,6 +20,11 @@
 
     <aside class="page-sidebar">
       <div class="page-sidebar-body">
+        <div class="panel panel-warning" v-if="addTo !== null">
+          Add to
+          <strong>{{addTo.data.name}}</strong>
+          <a href="javscript:void(0);" class="cancel-addto" @click="addTo = null">Cancel</a>
+        </div>
         <ul>
           <li>
             <button class="toolbar-button" @click="addField('input')">
@@ -35,7 +40,7 @@
           </li>
           <li>
             <button class="toolbar-button" @click="addField('number')">
-              <i class="fas fa-hashtag"></i> Number</button>
+              <i class="fas fa-hashtag fa-fw"></i> Number</button>
           </li>
           <li>
             <button class="toolbar-button" @click="addField('date')">
@@ -50,8 +55,12 @@
               <i class="far fa-image fa-fw"></i> Media</button>
           </li>
           <li>
-            <button class="toolbar-button" @click="addField('list')">
-              <i class="far fa-image fa-fw"></i> List</button>
+            <button class="toolbar-button" @click="addField('select')">
+              <i class="far fa-list-alt fa-fw"></i> List</button>
+          </li>
+          <li>
+            <button :disabled="addTo !== null" class="toolbar-button" @click="addField('repeater')">
+              <i class="fas fa-redo"></i> Repeater</button>
           </li>
           <li></li>
           <li></li>
@@ -59,7 +68,6 @@
       </div>
       <div class="page-sidebar-footer">
         <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">Create template</button>
-
       </div>
     </aside>
   </div>
@@ -78,6 +86,7 @@ export default {
       id: this.createId(),
       name: '',
       fields: [],
+      addTo: null,
     };
   },
   computed: {
@@ -87,10 +96,30 @@ export default {
       if (this.fields.some(x => x.data.name.length === 0)) return false;
       return true;
     },
+    groupedFields() {
+      const fields = [];
+      this.fields.forEach((field) => {
+        if (field.parentId === null) {
+          fields.push({
+            field,
+            children: []          });
+          return;
+        }
+        const oldField = fields.find(x => x.field.id === field.parentId);
+
+        if (oldField) {
+          oldField.children.push(field);
+        }
+      });
+      return fields;
+    },
   },
   methods: {
+    setAddTo(field) {
+      this.addTo = field;
+    },
     addField(type) {
-      this.fields.push({
+      const newField = {
         id: this.createId(),
         type,
         data: {
@@ -99,12 +128,19 @@ export default {
           tooltip: '',
           slug: '',
           options: [],
+          childFields: [],
         },
-      });
+      };
+
+      if (this.addTo === null) {
+        this.fields.push(newField);
+      } else {
+        console.log(this.addTo);
+        this.addTo.data.childFields.push(newField);
+      }
     },
     removeField(id) {
       const fieldIndex = this.fields.findIndex(x => x.id === id);
-      console.log(fieldIndex, id);
       if (fieldIndex !== null) {
         this.fields.splice(fieldIndex, 1);
       }
@@ -128,9 +164,7 @@ export default {
   display: flex;
 }
 
-
 li {
-
   i {
     font-size: 2rem;
     vertical-align: middle;
@@ -166,5 +200,9 @@ li {
   height: 0.1rem;
   background: #ccc;
   margin-bottom: 1.5rem;
+}
+
+.cancel-addto {
+  float: right;
 }
 </style>

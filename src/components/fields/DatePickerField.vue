@@ -1,8 +1,5 @@
 <template>
-  <label>
-    {{name}}
-    <datepicker :value="value" @selected="selected"></datepicker>
-  </label>
+  <datepicker :value="value" @selected="selected"></datepicker>
 </template>
 <script>
 import Datepicker from 'vuejs-datepicker';

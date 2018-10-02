@@ -117,9 +117,30 @@ strong {
         padding: 1rem 1.5rem;
     }
     &.button-small {
-        padding: .5rem .75rem;
-        font-size: .675rem;
+      padding: 1rem 1.4rem;
+      font-size: 1.4rem;
     }
+}
+
+.panel {
+  padding: 1rem;
+  margin: 1rem;
+  &.panel-warning {
+    background: @warning;
+    color: darken(@warning, 30%);
+    font-size: 1.2rem;
+    border: .1rem solid darken(@warning, 10%);
+
+    a {
+      color: darken(@warning, 30%);
+
+      &:hover {
+      color: darken(@warning, 30%);
+
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 .button(@color) {
@@ -530,10 +551,11 @@ a {
   padding-left: 48rem;
   &.page-with-sidebar-slide {
     padding-right: 0;
+    padding-left: 24rem;
   transition: all ease .3s;
   .page-sidebar {
     transition: all ease .3s;
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
 
   &.show {
@@ -563,7 +585,8 @@ th {
   text-align: left;
   font-weight: 600;
   padding: .75rem;
-  border-bottom: .1rem solid #ccc;
+  border-bottom: 0.1rem solid #E8E8E8;
+  
 }
 
 td {

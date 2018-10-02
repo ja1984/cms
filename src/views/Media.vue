@@ -1,7 +1,7 @@
 <template>
   <div class="page page-with-sidebar page-with-sidebar-slide" :class="{'show': selectedFile !== null}">
     <div class="container">
-      <h1 class="page-title">Media</h1>
+      <h1 class="page-title">Media library</h1>
       <div class="files">
         <div class="file" v-for="file in media" :key="file.id">
           <div class="card" @click="selectFile(file)" :class="{'selected': selectedFile && file.id === selectedFile.id}">
@@ -69,11 +69,23 @@ export default {
 .files {
   display: flex;
   flex-wrap: wrap;
+  margin-left: -1rem;
+  margin-right: -1rem;
 }
 
 .file {
   padding: 1rem;
-  flex: 0 0 20%;
+  flex: 0 0 50%;
+
+  @media (min-width: 768px) {
+    flex: 0 0 (100%/3);
+  }
+  @media (min-width: 1024px) {
+    flex: 0 0 25%;
+  }
+  @media (min-width: 1200px) {
+    flex: 0 0 20%;
+  }
 
   img {
     display: block;

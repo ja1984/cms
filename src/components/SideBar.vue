@@ -13,23 +13,34 @@
     <nav>
       <li>
         <router-link to="/templates">
-          <i class="far fa-file-alt"></i> Templates</router-link>
+          <i class="far fa-file-alt fa-fw"></i> Templates</router-link>
       </li>
       <li>
-        <router-link to="/pages">Pages</router-link>
+        <router-link to="/pages">
+          <i class="far fa-copy fa-fw"></i> Pages</router-link>
       </li>
       <li>
-        <router-link to="/media">Media</router-link>
+        <router-link to="/media">
+          <i class="far fa-file-image fa-fw"></i> Media</router-link>
       </li>
       <li>
-        <router-link to="/collections">Collections</router-link>
+        <router-link to="/collections">
+          <i class="fas fa-box-open fa-fw"></i> Collections</router-link>
       </li>
       <li>
-        <router-link to="/settings">Settings</router-link>
+        <router-link to="/settings">
+          <i class="fas fa-cogs fa-fw"></i> Settings</router-link>
       </li>
     </nav>
     <div class="account-wrapper">
-      <i class="fas fa-sliders-h"></i>
+      <div class="row row-no-gutter row-center-vertically">
+        <div class="column column-wrap">
+          <img src="https://lh4.googleusercontent.com/-0R5Sbwj-Vug/AAAAAAAAAAI/AAAAAAAAD7w/e-ELKyQda1c/photo.jpg" class="profile-image">
+        </div>
+        <div class="column">
+          <strong class="profile-name">Jonathan Andersson</strong>
+        </div>
+      </div>
     </div>
   </aside>
 </template>
@@ -68,21 +79,30 @@ export default {
 
 li {
   display: block;
-  padding: 1rem;
 
   i {
     margin-right: 0.2rem;
     font-size: 1.8rem;
     vertical-align: text-top;
   }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 a {
   font-weight: 600;
   font-size: 1.4rem;
+  padding: 1rem;
+
   opacity: 0.5;
   color: #fff;
-  display: inline-block;
+  display: block;
+
+  &.router-link-active {
+    opacity: .8;
+  }
 
   &:hover {
     opacity: 1;
@@ -113,6 +133,8 @@ a {
     margin-left: 0.1rem;
     transition: all ease 2.5s;
   }
+
+  
 
   &:hover {
     color: #fff;
@@ -165,5 +187,17 @@ a {
   font-size: 1rem;
   font-weight: normal;
   color: rgba(255, 255, 255, 0.3);
+}
+
+.profile-image {
+  border-radius: 50%;
+  border: 0.2rem solid #fff;
+  width: 3rem;
+  margin-right: 1rem;
+  display: block;
+}
+
+.profile-name {
+  font-size: 1.3rem;
 }
 </style>
