@@ -5,6 +5,7 @@ import page from '@/store/modules/page';
 import language from '@/store/modules/language';
 import collection from '@/store/modules/collection';
 import media from '@/store/modules/media';
+import firebase from '@/store/modules/firebase';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     language,
     collection,
     media,
+    firebase,
   },
   strict: debug,
 });

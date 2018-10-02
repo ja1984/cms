@@ -1,13 +1,24 @@
-version: '3.6'
+version: "3.6"
 
 services:
-    api:
-        image: api:latest
-        ports:
-            - 5000:5000
-        volumes:
-            - ./:/go/src/github.com/ja1984/cogCMS/backend
-    redis:
-        image: redis
-        ports:
-            - 6379
+  api:
+    image: api:latest
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/go/src/github.com/ja1984/cogCMS/backend
+  redis:
+    image: redis
+    ports:
+      - 6379
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: cogCMS
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
