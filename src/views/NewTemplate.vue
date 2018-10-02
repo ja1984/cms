@@ -49,6 +49,10 @@
             <button class="toolbar-button" @click="addField('media')">
               <i class="far fa-image fa-fw"></i> Media</button>
           </li>
+          <li>
+            <button class="toolbar-button" @click="addField('list')">
+              <i class="far fa-image fa-fw"></i> List</button>
+          </li>
           <li></li>
           <li></li>
         </ul>
@@ -94,6 +98,7 @@ export default {
           required: false,
           tooltip: '',
           slug: '',
+          options: [],
         },
       });
     },
@@ -125,7 +130,6 @@ export default {
 
 
 li {
-  padding: 0.25rem 0;
 
   i {
     font-size: 2rem;
@@ -136,7 +140,7 @@ li {
 
 .toolbar-button {
   border: none;
-  padding: 0.5rem;
+  padding: 0.75rem;
   cursor: pointer;
   transition: all ease 0.3s;
   // font-weight: 600;
@@ -152,7 +156,8 @@ li {
   }
 
   &:hover {
-    background: #fff;
+    background: #f9f9f9;
+    color: #282d3a;
   }
 }
 

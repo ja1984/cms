@@ -3,11 +3,17 @@
 
     <router-link to="/" class="logo">c<i></i>gCMS</router-link>
     <div class="site-selection">
-      <div class="selected-site">cogCMS<i class="fas fa-caret-down"></i></div>
+
+      <div class="selected-site">
+        <p class="small">Selected site</p>
+        cogCMS
+        <i class="fas fa-caret-down"></i>
+      </div>
     </div>
     <nav>
       <li>
-        <router-link to="/templates">Templates</router-link>
+        <router-link to="/templates">
+          <i class="far fa-file-alt"></i> Templates</router-link>
       </li>
       <li>
         <router-link to="/pages">Pages</router-link>
@@ -22,25 +28,25 @@
         <router-link to="/settings">Settings</router-link>
       </li>
     </nav>
-<div class="account-wrapper">
-  <i class="fas fa-sliders-h"></i>
-</div>
+    <div class="account-wrapper">
+      <i class="fas fa-sliders-h"></i>
+    </div>
   </aside>
 </template>
 
 <script>
 export default {
-  name: 'HeaderBar',
+  name: 'SideBar',
 };
 </script>
 
 <style lang="less" scoped>
 @import (reference) '~@/styles/site.less';
-@headerbarHeight: 24rem;
+@sidebarWidth: 24rem;
 
 .nav-sidebar {
   background: #282d3a;
-  width: @headerbarHeight;
+  width: @sidebarWidth;
   position: fixed;
   top: 0;
   left: 0;
@@ -63,6 +69,12 @@ export default {
 li {
   display: block;
   padding: 1rem;
+
+  i {
+    margin-right: 0.2rem;
+    font-size: 1.8rem;
+    vertical-align: text-top;
+  }
 }
 
 a {
@@ -117,15 +129,15 @@ a {
   right: 0;
   padding: 1rem;
   color: #fff;
-    cursor: pointer;
-  transition: all ease .3s;
+  cursor: pointer;
+  transition: all ease 0.3s;
   &:hover {
-    background: rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
 .site-selection {
-  border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
+  // border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
 }
 
 .selected-site {
@@ -134,15 +146,24 @@ a {
   padding: 1rem;
   position: relative;
   cursor: pointer;
-  transition: all ease .3s;
+  transition: all ease 0.3s;
   &:hover {
-    background: rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   i {
     position: absolute;
     right: 1rem;
-    top: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
+}
+
+.small {
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.3);
 }
 </style>

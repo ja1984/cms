@@ -40,13 +40,19 @@ const getters = {
 // actions
 const actions = {
   create({ commit }, payload) {
-    commit('create', payload);
+    return new Promise((resolve) => {
+      commit('create', payload);
+      resolve();
+    });
   },
   delete({ commit }, payload) {
     commit('delete', payload);
   },
   addKey({ commit }, payload) {
-    commit('addKey', payload);
+    return new Promise((resolve) => {
+      commit('addKey', payload);
+      resolve();
+    });
   },
 };
 

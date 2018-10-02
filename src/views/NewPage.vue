@@ -1,74 +1,78 @@
 <template>
-  <div class="new-page container">
-    <h1 class="page-title">New page</h1>
-    <div class="row">
-      <div class="column">
-        <main>
-          <div class="form-row">
-            <div class="row row-center-vertically">
-              <div class="column">
-                <input type="text" placeholder="Page name" v-model="name">
-              </div>
-              <div class="column">
-                <template v-if="slug.length > 2">
-                  <span class="tag" v-if="!editSlug" @click="editSlug = true">{{slug}}</span>
-                  <input type="text" v-model="slug" v-else>
-                </template>
+  <div class="page">
+    <div class="new-page container">
+      <h1 class="page-title">New page</h1>
+      <div class="row">
+        <div class="column">
+          <main>
+            <div class="form-row">
+              <div class="row row-center-vertically">
+                <div class="column">
+                  <input type="text" placeholder="Page name" v-model="name">
+                </div>
+                <div class="column">
+                  <template v-if="slug.length > 2">
+                    <span class="tag" v-if="!editSlug" @click="editSlug = true">{{slug}}</span>
+                    <input type="text" v-model="slug" v-else>
+                  </template>
+                </div>
               </div>
             </div>
-          </div>
 
-          <ul class="tabs">
-            <li class="tab" v-for="tab in tabs" v-bind:key="tab" :class="{'active': tab === selectedTab}" @click="selectedTab = tab">{{tab}}</li>
-          </ul>
+            <ul class="tabs">
+              <li class="tab" v-for="tab in tabs" v-bind:key="tab" :class="{'active': tab === selectedTab}" @click="selectedTab = tab">{{tab}}</li>
+            </ul>
 
-          <section v-show="selectedTab === 'Editor'">
-            <div class="fields">
-              <Field v-for="field in fields" :key="field.id" :data="field"></Field>
-            </div>
-          </section>
-          <section v-show="selectedTab === 'Pretty'">
-            <h1>{{name}}</h1>
-            <p class="slug">
-              <span class="dimmed">{{baseUrl}}</span>{{slug}}</p>
-            <div class="fields">
-              <div class="field-preview" v-for="field in fields" :key="field.id">
-                <h4>{{field.name}}</h4>
-                <div v-html="field.value"></div>
+            <section v-show="selectedTab === 'Editor'">
+              <div class="fields">
+                <Field v-for="field in fields" :key="field.id" :data="field"></Field>
               </div>
-            </div>
-          </section>
-          <section class="json-preview" v-show="selectedTab === 'JSON'">
-            <pre v-html="pagePreview"></pre>
-            <div class="preview-footer">
-              Response size: ~{{pageSize}} bytes
-            </div>
-          </section>
-        </main>
-      </div>
-      <div class="column column-wrap">
-        <aside>
+            </section>
+            <section v-show="selectedTab === 'Pretty'">
+              <h1>{{name}}</h1>
+              <p class="slug">
+                <span class="dimmed">{{baseUrl}}</span>{{slug}}</p>
+              <div class="fields">
+                <div class="field-preview" v-for="field in fields" :key="field.id">
+                  <h4>{{field.name}}</h4>
+                  <div v-html="field.value"></div>
+                </div>
+              </div>
+            </section>
+            <section class="json-preview" v-show="selectedTab === 'JSON'">
+              <div class="json-wrapper">
+                <pre v-html="htmlEncode(pagePreview)"></pre>
+              </div>
+              <div class="preview-footer">
+                Response size: ~{{pageSize}} bytes
+              </div>
+            </section>
+          </main>
+        </div>
+        <div class="column column-wrap">
+          <aside>
 
-          <div class="">
-            <div class="card-body">
-              <div class="form-row">
-                <label>
-                  Template
-                  <select v-model="selectedTemplate">
-                    <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
-                  </select>
-                </label>
+            <div class="">
+              <div class="card-body">
+                <div class="form-row">
+                  <label>
+                    Template
+                    <select v-model="selectedTemplate">
+                      <option v-for="template in templates" :value="template" :key="template.id">{{template.name}}</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div class="card-body">
+              </div>
+              <div class="card-footer">
+                <div>
+                  <button @click="createPage" :disabled="!canCreate" class="button button-success button-block">Create page</button>
+                </div>
               </div>
             </div>
-            <div class="card-body">
-            </div>
-            <div class="card-footer">
-              <div>
-                <button @click="createPage" :disabled="!canCreate" class="button button-success button-block">Create page</button>
-              </div>
-            </div>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </div>
     </div>
   </div>
@@ -148,8 +152,17 @@ export default {
           value,
           required: field.data.required,
           tooltip: field.data.tooltip,
+          options: field.data.options || [],
         });
       });
+    },
+    htmlEncode(input) {
+      const text = input || '';
+      return text.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     },
     slugify(input) {
       return input.toString().toLowerCase()
@@ -228,6 +241,10 @@ aside {
   border: 0.1rem solid #dfdfdf;
   flex-direction: column;
   overflow: hidden;
+
+  .json-wrapper {
+    overflow: hidden;
+  }
 
   pre {
     flex: 1;

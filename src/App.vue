@@ -1,22 +1,25 @@
 <template>
   <div id="app">
-    <header-bar></header-bar>
+    <side-bar></side-bar>
     <main class="content-wrapper">
       <router-view/>
     </main>
   </div>
 </template>
 <script>
-import HeaderBar from '@/components/HeaderBar.vue';
+import SideBar from '@/components/SideBar.vue';
 
 export default {
   name: 'App',
   components: {
-    HeaderBar,
+    SideBar,
   },
 };
 </script>
 <style lang="less">
 @import '~@/styles/site.less';
 
+.content-wrapper {
+  padding-top: 2rem;
+}
 </style>
