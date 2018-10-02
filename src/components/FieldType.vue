@@ -163,7 +163,7 @@ export default {
 .child-field {
   margin-bottom: 0.1rem;
   padding-left: 1rem;
-  border-left: 0.1rem dotted #e8e8e8;
+  border-left: 0.1rem dashed #e8e8e8;
   margin-left: 1rem;
 }
 

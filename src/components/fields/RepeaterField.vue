@@ -1,6 +1,5 @@
 <template>
   <div class="fields">
-    <button class="button button-primary button-small" @click="addField">Add field</button>
     <!-- <Field v-for="childField in childFields" :key="childField.id" :data="childField"></Field> -->
   </div>
 </template>
