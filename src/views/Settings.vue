@@ -27,9 +27,9 @@
         </div>
       </form>
 
-      <div class="site-languages">
+      <div class="site-settings">
         <h3  class="sub-title">Your locales</h3>
-        <div class="site-language row row-center-vertically" v-for="language in languages" :key="language.slug">
+        <div class="site-settings row row-center-vertically" v-for="language in languages" :key="language.slug">
           <div class="column">{{language.language}}</div>
           <div class="column">{{language.slug}}</div>
           <div class="column">{{language.isDefault}}</div>
@@ -41,6 +41,36 @@
         </div>
       </div>
     </section>
+
+
+    <section v-if="selectedTab === 'Users'">
+      <h3 class="sub-title">Add new user</h3>
+      <form @submit.prevent="sendInvite">
+        <div class="form-row">
+          <label>
+            <span>Email</span>
+            <input type="email" required placeholder="email">
+          </label>
+        </div>
+        <div>
+          <button class="button button-success" type="submit">Send invite</button>
+        </div>
+      </form>
+
+      <div class="site-settings">
+        <h3  class="sub-title">Users for Site</h3>
+        <div class="site-settings row row-center-vertically" v-for="user in usersForSite" :key="user.id">
+          <div class="column">{{user.email}}</div>
+          <div class="column">{{user.is_admin}}</div>
+          <div class="column column-wrap">
+            <button class="button button-error" :disabled="user.is_admin" @click="deleteUser(user.id)">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
   </div>
 </template>
@@ -57,7 +87,7 @@ export default {
   },
   data() {
     return {
-      tabs: ['Localization'],
+      tabs: ['Localization', 'Users', 'Site'],
       selectedTab: 'Localization',
       language: '',
       slug: '',
@@ -69,6 +99,14 @@ export default {
     },
     deleteLanguage(slug) {
       this.$store.dispatch('language/delete', { slug });
+    },
+
+    sendInvite() {
+      this.$store.dispatch('user/sendInvite', { email: email });
+    },
+
+    deleteUser(id) {
+      this.$store.dispatch('user/delete', { id });
     },
   },
 };
