@@ -20,32 +20,39 @@
       </div>
 
       <div class="column column-wrap">
-        <button class="button button-primary button-small" @click="newOption" v-if="type === 'select'">Add option</button>
-        <button class="button button-primary button-small" @click="$emit('setAddTo')" v-if="type === 'repeater'">Add field</button>
-      </div>
-      <div class="column column-wrap">
-        <div class="field-tools">
-          <!-- <button class="field-tools-button" @click="removeField(field.id)">
-            <i class="far fa-trash-alt"></i>
-          </button> -->
-        </div>
-      </div>
-    </div>
-
-    <div class="child-input" v-for="(option, index) in options" :key="option.id">
-      <div class="row row-no-gutter">
-        <div class="column">
-          <input type="text"  :placeholder="`Option ${index+1}`" @input="update(false)" v-model="option.value">
-        </div>
-        <div class="column column-wrap">
-          <button :disabled="index === 0" class="button button-small button-error toolbar-button">
+        <div class="toolbar field-tools">
+          <button class="button button-error button-small toolbar-button" @click="removeField">
             <i class="far fa-trash-alt"></i>
           </button>
         </div>
       </div>
     </div>
-    <div class="child-field" v-if="type === 'repeater'" v-for="field in value.childFields" :key="field.id">
-      <field-type v-model="field.data" :type="field.type"></field-type>
+
+    <div v-if="type === 'select'">
+      <div class="child-input" v-for="(option, index) in options" :key="option.id">
+        <div class="row">
+          <div class="column">
+            <input type="text" :placeholder="`Option ${index+1}`" @input="update(false)" v-model="option.value">
+          </div>
+          <div class="column column-wrap">
+            <button :disabled="index === 0 && options.length === 1" class="button button-small button-error toolbar-button" @click="removeOption(option.id)">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="child-toolbar">
+        <button class="button button-primary button-small" @click="newOption" v-if="type === 'select'">Add option</button>
+      </div>
+    </div>
+    <div v-if="type === 'repeater'">
+      <div class="child-field" v-for="field in value.childFields" :key="field.id">
+        <field-type v-model="field.data" :type="field.type" @removeField="removeChildField(field.id)"></field-type>
+      </div>
+      <div class="child-toolbar">
+        <button class="button button-primary button-small" @click="$emit('setAddTo')" v-if="type === 'repeater'" :disabled="disableSetAddTo">Add field</button>
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +71,8 @@ export default {
   props: {
     value: { type: Object },
     type: { type: String },
+    id: { type: String },
+    disableSetAddTo: { type: Boolean, default: false },
     children: { type: Array, default: () => [] },
   },
   data() {
@@ -103,6 +112,27 @@ export default {
     },
   },
   methods: {
+    removeChildField(id) {
+      const index = this.value.childFields.findIndex(x => x.id === id);
+      this.value.childFields.splice(index, 1);
+      this.update(false);
+    },
+    removeField() {
+      if (this.value.name !== '') {
+        if (window.confirm('You have edited this field, are you sure you want to delete it?')) {
+          this.$emit('removeField', this.id);
+        }
+      } else {
+        this.$emit('removeField', this.id);
+      }
+    },
+    removeOption(id) {
+      const index = this.options.findIndex(x => x.id === id);
+      if (index > -1) {
+        this.options.splice(index, 1);
+        this.update(false);
+      }
+    },
     newOption() {
       this.options.push({
         id: this.createId(),
@@ -182,14 +212,22 @@ export default {
 }
 
 .child-input {
-  margin-top: 1rem;
+  // margin-top: 1rem;
 
   &:first-child {
     margin: 0;
   }
 }
 
+.child-toolbar {
+  padding: 1rem 0;
+}
+
 .toolbar-button {
-  margin-left: 1rem;
+  margin-left: 0.5rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
 }
 </style>

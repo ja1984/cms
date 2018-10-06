@@ -70,7 +70,6 @@ export default {
       });
     },
     uploadFiles(event) {
-      console.log(event, event.dataTransfer, event.target.files);
       const files = event.target.files; //eslint-disable-line
 
       for (let i = 0; i < files.length; i += 1) {

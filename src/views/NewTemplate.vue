@@ -12,7 +12,7 @@
             </div>
             <div class="divider"></div>
             <strong>Fields</strong>
-            <field-type v-for="field in fields" @setAddTo="setAddTo(field)" :key="field.id" v-model="field.data" :type="field.type"></field-type>
+            <field-type v-for="field in fields" @setAddTo="setAddTo(field)" :disableSetAddTo="addTo !== null" @removeField="removeField" :id="field.id" :key="field.id" v-model="field.data" :type="field.type"></field-type>
           </main>
         </div>
       </div>
