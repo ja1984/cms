@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page page-with-sidebar page-with-sidebar-slide" :class="{'show': showAddNewField}">
     <header>
       <div class="row row-center-vertically">
         <div class="column">
@@ -11,7 +11,11 @@
             <input type="text" v-model="slug" v-else>
           </template>
         </div>
+        <div class="colomn column-wrap">
+          <button disabled @click="showAddNewField = !showAddNewField" class="button button-primary button-block button-save">Add new field</button>
+        </div>
         <div class="column column-wrap">
+
           <div class="button-wrapper">
             <button @click="createPage(false)" :disabled="!canCreate" class="button button-success button-block button-save">Save page</button>
             <button @click="showPopup = !showPopup" :disabled="!canCreate" class="button button-success button-more">
@@ -105,6 +109,9 @@
         </div> -->
       </div>
     </div>
+    <aside class="page-sidebar page-sidebar">
+        <field-selection :disableRepeater="true" @addNewField="addField"></field-selection>      
+    </aside>
   </div>
 </template>
 
@@ -112,11 +119,14 @@
 import { mapGetters } from 'vuex';
 import Field from '@/components/Field.vue';
 import { createPage } from '@/api/page';
+import FieldSelection from '@/components/FieldSelection.vue';
+
 
 export default {
   name: 'NewPage',
   components: {
     Field,
+    FieldSelection,
   },
   data() {
     return {
@@ -131,6 +141,7 @@ export default {
       editSlug: false,
       publish: false,
       showPopup: false,
+      showAddNewField: false,
     };
   },
   mounted() {
@@ -199,6 +210,9 @@ export default {
     },
   },
   methods: {
+    addNewField(type) {
+
+    },
     addField(id) {
       console.log('addfield', id);
       const template = this.selectedTemplate.fields.find(x => x.id === id);
@@ -331,6 +345,7 @@ export default {
 }
 aside {
   width: 30rem;
+  top: 7rem;
 }
 
 .json-preview {

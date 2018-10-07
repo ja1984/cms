@@ -17,7 +17,6 @@
         </div>
       </div>
     </div>
-
     <aside class="page-sidebar">
       <div class="page-sidebar-body">
         <div class="panel panel-warning" v-if="addTo !== null">
@@ -25,46 +24,7 @@
           <strong>{{addTo.data.name}}</strong>
           <a href="javscript:void(0);" class="cancel-addto" @click="addTo = null">Cancel</a>
         </div>
-        <ul>
-          <li>
-            <button class="toolbar-button" @click="addField('input')">
-              <i class="fas fa-toggle-on fa-fw"></i> Text</button>
-          </li>
-          <li>
-            <button class="toolbar-button" @click="addField('textarea')">
-              <i class="fas fa-code fa-fw"></i> Textarea</button>
-          </li>
-          <li>
-            <button class="toolbar-button" @click="addField('boolean')">
-              <i class="fas fa-toggle-on fa-fw"></i> True / false</button>
-          </li>
-          <li>
-            <button class="toolbar-button" @click="addField('number')">
-              <i class="fas fa-hashtag fa-fw"></i> Number</button>
-          </li>
-          <li>
-            <button class="toolbar-button" @click="addField('date')">
-              <i class="far fa-calendar-alt fa-fw"></i> Date</button>
-          </li>
-          <!-- <li>
-                  <button class="toolbar-button" @click="addField('group')">
-                    <i class="far fa-folder fa-fw"></i> Group</button>
-                </li> -->
-          <li>
-            <button class="toolbar-button" @click="addField('media')">
-              <i class="far fa-image fa-fw"></i> Media</button>
-          </li>
-          <li>
-            <button class="toolbar-button" @click="addField('select')">
-              <i class="far fa-list-alt fa-fw"></i> List</button>
-          </li>
-          <li>
-            <button :disabled="addTo !== null" class="toolbar-button" @click="addField('repeater')">
-              <i class="fas fa-redo"></i> Repeater</button>
-          </li>
-          <li></li>
-          <li></li>
-        </ul>
+        <field-selection :disableRepeater="addTo !== null" @addField="addField"></field-selection>
       </div>
       <div class="page-sidebar-footer">
         <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">Create template</button>
@@ -75,11 +35,13 @@
 
 <script>
 import FieldType from '@/components/FieldType.vue';
+import FieldSelection from '@/components/FieldSelection.vue';
 
 export default {
   name: 'NewTemplate',
   components: {
     FieldType,
+    FieldSelection,
   },
   data() {
     return {
@@ -164,36 +126,7 @@ export default {
   display: flex;
 }
 
-li {
-  i {
-    font-size: 2rem;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-  }
-}
 
-.toolbar-button {
-  border: none;
-  padding: 0.75rem;
-  cursor: pointer;
-  transition: all ease 0.3s;
-  // font-weight: 600;
-  font-size: 1.5rem;
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-
-  &:active,
-  &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    background: #f9f9f9;
-    color: #282d3a;
-  }
-}
 
 .divider {
   width: 100%;

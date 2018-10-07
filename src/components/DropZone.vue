@@ -27,22 +27,23 @@ export default {
   },
   methods: {
     uploadFile(uploadObject) {
-      this.$store.dispatch('media/ADD_FILE', uploadObject);
+      this.$store.dispatch('media/create', uploadObject);
     },
     prepareFileForUpload(file) {
       new Promise((resolve) => {
+        const image = new Image();
+
         const fileInformation = {
           file,
           fileName: file.name,
           filePath: `/${file.name}`,
           size: file.size,
           type: file.type,
-          folderId: (this.selectedFolder === null ? -1 : this.selectedFolder.id),
           dimensions: null,
+          image,
         };
 
         const url = window.URL || window.webkitURL;
-        const image = new Image();
 
         image.onload = () => {
           fileInformation.dimensions = {

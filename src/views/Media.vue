@@ -5,9 +5,9 @@
       <div class="files">
         <div class="file" v-for="file in media" :key="file.id">
           <div class="card" @click="selectFile(file)" :class="{'selected': selectedFile && file.id === selectedFile.id}">
-            <img :src="file.url">
+            <img :src="file.object.image.src" class="image-preview" :class="{'pending': !file.complete && !file.failed}">
             <div class="card-footer">
-              {{file.filename}}
+              {{file.object.fileName}}
             </div>
           </div>
         </div>
@@ -103,5 +103,12 @@ export default {
 
 img {
   width: 100%;
+}
+
+.image-preview {
+  transition: all ease .3s;
+  &.pending {
+    filter: grayscale(100%);
+  }
 }
 </style>
