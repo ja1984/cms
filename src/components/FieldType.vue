@@ -21,7 +21,7 @@
 
       <div class="column column-wrap">
         <div class="toolbar field-tools">
-          <button class="button button-error button-small toolbar-button" @click="removeField">
+          <button class="button button-error button-small toolbar-button" @click="removeField" v-if="canBeDeleted">
             <i class="far fa-trash-alt"></i>
           </button>
         </div>
@@ -75,6 +75,7 @@ export default {
     type: { type: String },
     id: { type: String },
     disableSetAddTo: { type: Boolean, default: false },
+    canBeDeleted: { type: Boolean, default: true },
     children: { type: Array, default: () => [] },
   },
   data() {

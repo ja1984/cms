@@ -99,7 +99,6 @@ export default {
       if (this.addTo === null) {
         this.fields.push(newField);
       } else {
-        console.log(this.addTo);
         this.addTo.data.childFields.push(newField);
       }
     },
@@ -110,7 +109,9 @@ export default {
       }
     },
     createTemplate() {
-      this.$store.dispatch('template/create', { id: this.id, name: this.name, fields: this.fields });
+      this.$store.dispatch('template/create', { id: this.id, name: this.name, fields: this.fields }).then((response) => {
+        this.$router.push({ name: 'templates' });
+      });
     },
   },
 };

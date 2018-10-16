@@ -1,12 +1,11 @@
 <template>
   <div class="page">
-
     <div class="container">
       <template v-if="collection">
         <h1 class="page-title">{{collection.key}}</h1>
         <div class="collection">
           <div class="collection-properties" v-for="property in collection.properties" :key="property.key">
-            {{property.key}}
+            <strong>{{property.key}}</strong>
             <div class="property-values">
               <div class="property-value" v-for="(value, propertyName) in property.value" :key="propertyName">
                 {{propertyName}} : {{value}}
@@ -130,7 +129,7 @@ export default {
 <style lang="less" scoped>
 .collection div {
   padding: 0.5rem;
-  padding-left: 1rem;
+  // padding-left: 1rem;
 }
 
 .no-padding-bottom {

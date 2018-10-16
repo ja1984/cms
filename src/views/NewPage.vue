@@ -11,8 +11,20 @@
             <input type="text" v-model="slug" v-else>
           </template>
         </div>
+
         <div class="colomn column-wrap">
-          <button disabled @click="showAddNewField = !showAddNewField" class="button button-primary button-block button-save">Add new field</button>
+          <div class="button-wrapper button-add-new-field">
+            <button @click="showAddNewField = !showAddNewField" class="button button-primary button-block button-save">Add new field
+              <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="popup" :class="{'show': showAddNewField}">
+              <div class="card">
+                <div class="card-body">
+                  <field-selection :disableRepeater="true" @addField="addNewField"></field-selection>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="column column-wrap">
 
@@ -62,6 +74,10 @@
                   <button class="button button-primary button-small" @click="addField(field.field.id)" v-if="field.field.type === 'repeater'">Add field</button>
                 </div>
               </div>
+              <div class="addNewField" v-if="newTemplateField !== null">
+                <field-type :canBeDeleted="false" :id="newTemplateField.id" :key="newTemplateField.id" v-model="newTemplateField.data" :type="newTemplateField.type"></field-type>
+                <button class="button button-primary" @click="saveNewField">Add field</button> <button class="button button-link margin margin-left-1" @click="newTemplateField = null">Cancel</button>
+              </div>
             </section>
             <section v-show="selectedTab === 'Pretty'">
               <h1>{{name}}</h1>
@@ -109,9 +125,6 @@
         </div> -->
       </div>
     </div>
-    <aside class="page-sidebar page-sidebar">
-        <field-selection :disableRepeater="true" @addNewField="addField"></field-selection>      
-    </aside>
   </div>
 </template>
 
@@ -122,6 +135,7 @@ import { createId } from '@/scripts/utils';
 import Field from '@/components/Field.vue';
 import { createPage } from '@/api/page';
 import FieldSelection from '@/components/FieldSelection.vue';
+import FieldType from '@/components/FieldType.vue';
 
 
 export default {
@@ -129,6 +143,7 @@ export default {
   components: {
     Field,
     FieldSelection,
+    FieldType,
   },
   data() {
     return {
@@ -144,6 +159,7 @@ export default {
       publish: false,
       showPopup: false,
       showAddNewField: false,
+      newTemplateField: null,
     };
   },
   mounted() {
@@ -212,8 +228,26 @@ export default {
     },
   },
   methods: {
+    saveNewField() {
+      const value = this.newTemplateField.type === 'boolean' ? false : null;
+      console.log(this.newTemplateField, value);
+      this.fields.push(this.createField(this.newTemplateField, value, []));
+      this.newTemplateField = null;
+    },
     addNewField(type) {
-
+      this.showAddNewField = false;
+      this.newTemplateField = {
+        id: createId(),
+        type,
+        data: {
+          name: '',
+          required: false,
+          tooltip: '',
+          slug: '',
+          options: [],
+          childFields: [],
+        },
+      };
     },
     addField(id) {
       console.log('addfield', id);
@@ -383,6 +417,10 @@ aside {
   border-bottom: 0.1rem solid #e8e8e8;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
+
+  &:last-child {
+    border: 0;
+  }
 }
 
 .child-field {
@@ -395,6 +433,14 @@ aside {
   width: 25rem;
   display: flex;
   position: relative;
+  &.button-add-new-field {
+    width: auto;
+
+    i {
+      margin-left: 1rem;
+    }
+  }
+
   .button-save {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
