@@ -30,7 +30,7 @@
               <span class="label">Value</span>
             </div>
           </div>
-          <div class="row" v-for="field in fields" :key="field.slug">
+          <div class="row" v-for="field in fields" :key="field.id">
             <div class="column no-padding-top">
               <input type="text" v-model="field.slug" :placeholder="field.slug">
             </div>
@@ -62,6 +62,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { createId } from '@/scripts/utils';
+
 
 export default {
   name: 'collection',
@@ -79,6 +81,7 @@ export default {
       this.fields = [];
       this.fields.push(...this.languages.map((x) => {
         return {
+          id: createId(),
           language: x.language,
           slug: x.slug,
           value: '',

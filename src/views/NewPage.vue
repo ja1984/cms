@@ -117,6 +117,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { createId } from '@/scripts/utils';
+
 import Field from '@/components/Field.vue';
 import { createPage } from '@/api/page';
 import FieldSelection from '@/components/FieldSelection.vue';
@@ -131,7 +133,7 @@ export default {
   data() {
     return {
       selectedTemplate: null,
-      id: this.createId(),
+      id: createId(),
       name: '',
       slug: '',
       fields: [],
@@ -220,7 +222,7 @@ export default {
 
       const childFields = template.data.childFields.map((childField) => {
         const childValue = childField.type === 'boolean' ? false : null;
-        return this.createField(childField, childValue, [], this.createId());
+        return this.createField(childField, childValue, [], createId());
       });
 
       console.log('childFields', childFields, template.data.childFields);
@@ -240,7 +242,7 @@ export default {
 
         const childFields = field.data.childFields.map((childField) => {
           const childValue = childField.type === 'boolean' ? false : null;
-          return this.createField(childField, childValue, [], this.createId());
+          return this.createField(childField, childValue, [], createId());
         });
 
         this.childFields.push({
@@ -307,11 +309,6 @@ export default {
           });
         }
       });
-    },
-    createId() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
     },
   },
   watch: {

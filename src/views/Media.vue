@@ -2,6 +2,8 @@
   <div class="page page-with-sidebar page-with-sidebar-slide" :class="{'show': selectedFile !== null}">
     <div class="container">
       <h1 class="page-title">Media library</h1>
+        <h2 class="sub-title text-center" v-if="media.length === 0">Looks like your media library is empty, just drag and drop files anywhere in cogCMS to upload</h2>
+
       <div class="files">
         <media-list-item v-for="file in media" :file="file" :key="file.id"></media-list-item>
         <!-- <div class="file" v-for="file in media" :key="file.id">

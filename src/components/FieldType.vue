@@ -59,6 +59,8 @@
 
 
 <script>
+import { createId } from '@/scripts/utils';
+
 import Checkbox from '@/components/CheckBox.vue';
 import FieldType from '@/components/FieldType.vue';
 
@@ -135,7 +137,7 @@ export default {
     },
     newOption() {
       this.options.push({
-        id: this.createId(),
+        id: createId(),
         value: '',
       });
       this.update(false);
@@ -150,11 +152,6 @@ export default {
         options: this.options,
         childFields: this.value.childFields,
       });
-    },
-    createId() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
     },
     slugify(input) {
       return input.toString().toLowerCase()

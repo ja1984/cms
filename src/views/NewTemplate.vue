@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { createId } from '@/scripts/utils';
+
 import FieldType from '@/components/FieldType.vue';
 import FieldSelection from '@/components/FieldSelection.vue';
 
@@ -45,7 +47,7 @@ export default {
   },
   data() {
     return {
-      id: this.createId(),
+      id: createId(),
       name: '',
       fields: [],
       addTo: null,
@@ -82,7 +84,7 @@ export default {
     },
     addField(type) {
       const newField = {
-        id: this.createId(),
+        id: createId(),
         type,
         data: {
           name: '',
@@ -109,11 +111,6 @@ export default {
     },
     createTemplate() {
       this.$store.dispatch('template/create', { id: this.id, name: this.name, fields: this.fields });
-    },
-    createId() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
     },
   },
 };
