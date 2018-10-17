@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	ginjwt "github.com/appleboy/gin-jwt"
@@ -15,6 +16,9 @@ import (
 	"github.com/ja1984/cogCMS/backend/routes"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/google"
 	migrate "github.com/rubenv/sql-migrate"
 	jwt "gopkg.in/dgrijalva/jwt-go.v3"
 )
@@ -74,6 +78,7 @@ func main() {
 	runDatabaseMigrations()
 
 	authHandler := setupAuthMiddleware()
+	setupGoth()
 
 	r := gin.Default()
 
@@ -93,6 +98,23 @@ func main() {
 		apiGroup.POST("admin/register", routes.RegisterUser)
 		apiGroup.GET("auth/refresh_token", authHandler.RefreshHandler)
 		apiGroup.POST("auth/login", authHandler.LoginHandler)
+
+		apiGroup.GET("auth/google", func(c *gin.Context) {
+			queryString := c.Request.URL.Query()
+			queryString.Add("provider", "google")
+			c.Request.URL.RawQuery = queryString.Encode()
+			gothic.BeginAuthHandler(c.Writer, c.Request)
+		})
+
+		apiGroup.GET("auth/google/callback", func(c *gin.Context) {
+			user, err := gothic.CompleteUserAuth(c.Writer, c.Request)
+			if err != nil {
+				fmt.Fprintln(c.Writer, err)
+				return
+			}
+
+			log.Printf("User: %v", user)
+		})
 
 		r.NoRoute(authHandler.MiddlewareFunc(), func(c *gin.Context) {
 			claims := ginjwt.ExtractClaims(c)
@@ -214,4 +236,10 @@ func setupAuthMiddleware() *ginjwt.GinJWTMiddleware {
 	}
 
 	return authMiddleware
+}
+
+func setupGoth() {
+	goth.UseProviders(
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:5000/auth/google/callback"),
+	)
 }
