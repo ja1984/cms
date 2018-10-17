@@ -2,15 +2,18 @@
   <div class="page page-with-sidebar page-with-sidebar-slide" :class="{'show': selectedFile !== null}">
     <div class="container">
       <h1 class="page-title">Media library</h1>
+        <h2 class="sub-title text-center" v-if="media.length === 0">Looks like your media library is empty, just drag and drop files anywhere in cogCMS to upload</h2>
+
       <div class="files">
-        <div class="file" v-for="file in media" :key="file.id">
+        <media-list-item v-for="file in media" :file="file" :key="file.id"></media-list-item>
+        <!-- <div class="file" v-for="file in media" :key="file.id">
           <div class="card" @click="selectFile(file)" :class="{'selected': selectedFile && file.id === selectedFile.id}">
-            <img :src="file.url">
+            <img :src="file.object.image.src" class="image-preview" :class="{'pending': !file.complete && !file.failed}">
             <div class="card-footer">
-              {{file.filename}}
+              {{file.object.fileName}}
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <aside class="page-sidebar page-sidebar-wide">
@@ -26,8 +29,13 @@
 <script>
 import { mapGetters } from 'vuex';
 
+import MediaListItem from '@/components/MediaListItem.vue';
+
 export default {
   name: 'Media',
+  components: {
+    MediaListItem,
+  },
   data() {
     return {
       selectedFile: null,
@@ -73,7 +81,7 @@ export default {
   margin-right: -1rem;
 }
 
-.file {
+.media-list-item {
   padding: 1rem;
   flex: 0 0 50%;
 
@@ -103,5 +111,12 @@ export default {
 
 img {
   width: 100%;
+}
+
+.image-preview {
+  transition: all ease .3s;
+  &.pending {
+    filter: grayscale(100%);
+  }
 }
 </style>

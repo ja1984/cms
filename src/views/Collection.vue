@@ -1,12 +1,11 @@
 <template>
   <div class="page">
-
     <div class="container">
       <template v-if="collection">
         <h1 class="page-title">{{collection.key}}</h1>
         <div class="collection">
           <div class="collection-properties" v-for="property in collection.properties" :key="property.key">
-            {{property.key}}
+            <strong>{{property.key}}</strong>
             <div class="property-values">
               <div class="property-value" v-for="(value, propertyName) in property.value" :key="propertyName">
                 {{propertyName}} : {{value}}
@@ -30,7 +29,7 @@
               <span class="label">Value</span>
             </div>
           </div>
-          <div class="row" v-for="field in fields" :key="field.slug">
+          <div class="row" v-for="field in fields" :key="field.id">
             <div class="column no-padding-top">
               <input type="text" v-model="field.slug" :placeholder="field.slug">
             </div>
@@ -62,6 +61,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { createId } from '@/scripts/utils';
+
 
 export default {
   name: 'collection',
@@ -79,6 +80,7 @@ export default {
       this.fields = [];
       this.fields.push(...this.languages.map((x) => {
         return {
+          id: createId(),
           language: x.language,
           slug: x.slug,
           value: '',
@@ -127,7 +129,7 @@ export default {
 <style lang="less" scoped>
 .collection div {
   padding: 0.5rem;
-  padding-left: 1rem;
+  // padding-left: 1rem;
 }
 
 .no-padding-bottom {
