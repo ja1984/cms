@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	ginjwt "github.com/appleboy/gin-jwt"
+	"github.com/futurenda/google-auth-id-token-verifier"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
@@ -101,12 +103,28 @@ func main() {
 		apiGroup.POST("auth/login", authHandler.LoginHandler)
 
 		apiGroup.POST("auth/google", func(c *gin.Context) {
-			var reqest GoogleAuthRequst
-			err := c.BindJSON(&reqest)
+			var request GoogleAuthRequst
+			err := c.BindJSON(&request)
 
 			if err != nil {
 				log.Printf("Couldnt bind json auth/google, err: %v", err)
 			}
+
+			v := googleAuthIDTokenVerifier.Verifier{}
+			aud := os.Getenv("GOOGLE_KEY")
+			err = v.VerifyIDToken(request.Token, []string{
+				aud,
+			})
+			if err != nil {
+				log.Printf("Tried verify %s with google aud:%s", request.Token, aud)
+				c.AbortWithError(http.StatusUnauthorized, err)
+				return
+				// claimSet.Iss,claimSet.Email ... (See claimset.go)
+			}
+
+			claimSet, err := googleAuthIDTokenVerifier.Decode(request.Token)
+
+			log.Printf("Claims from google %s", claimSet.Email)
 
 			data := User{
 				UserName:  "1",
@@ -130,8 +148,7 @@ func main() {
 			tokenString, err := token.SignedString(authHandler.Key)
 
 			if err != nil {
-				c.Error(ginjwt.ErrFailedTokenCreation)
-				c.Status(http.StatusUnauthorized)
+				c.AbortWithError(http.StatusUnauthorized, err)
 				return
 			}
 

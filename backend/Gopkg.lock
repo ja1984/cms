@@ -37,6 +37,14 @@
   version = "v2.5.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:60b610a7674df23c38ce0cec4b09e3e139dd72ef97178deee4e4c1b5b0429dd3"
+  name = "github.com/futurenda/google-auth-id-token-verifier"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2a5b89f28b7e414a23e04fdf768f14740a4ec2ed"
+
+[[projects]]
   digest = "1:2b59aca2665ff804f6606c8829eaee133ddd3aefbc841014660d961b0034f888"
   name = "github.com/gin-contrib/cors"
   packages = ["."]
@@ -105,38 +113,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
-  name = "github.com/gorilla/context"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
-  version = "v1.1.1"
-
-[[projects]]
-  digest = "1:e73f5b0152105f18bc131fba127d9949305c8693f8a762588a82a48f61756f5f"
-  name = "github.com/gorilla/mux"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
-  version = "v1.6.2"
-
-[[projects]]
-  digest = "1:e72d1ebb8d395cf9f346fd9cbc652e5ae222dd85e0ac842dc57f175abed6d195"
-  name = "github.com/gorilla/securecookie"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
-  version = "v1.1.1"
-
-[[projects]]
-  digest = "1:e5bf52fd66a2e984b57b4c0f2c4ee024ed749a19886246240629998dc0cf31ce"
-  name = "github.com/gorilla/sessions"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "f57b7e2d29c6211d16ffa52a0998272f75799030"
-  version = "v1.1.3"
-
-[[projects]]
   digest = "1:6c41d4f998a03b6604227ccad36edaed6126c397e5d78709ef4814a1145a6757"
   name = "github.com/jmoiron/sqlx"
   packages = [
@@ -165,18 +141,6 @@
   pruneopts = "UT"
   revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
   version = "v1.0.0"
-
-[[projects]]
-  digest = "1:27b72b0eb79177ade422b7087932936550091427dc9f4186555eb839ed029b94"
-  name = "github.com/markbates/goth"
-  packages = [
-    ".",
-    "gothic",
-    "providers/google",
-  ]
-  pruneopts = "UT"
-  revision = "9f7a761e41491bbab395bc8005834ce714ae4f22"
-  version = "v1.47.0"
 
 [[projects]]
   digest = "1:0981502f9816113c9c8c4ac301583841855c8cf4da8c72f696b3ebedf6d0e4e5"
@@ -455,15 +419,13 @@
     "firebase.google.com/go/auth",
     "github.com/alex-ant/envs",
     "github.com/appleboy/gin-jwt",
+    "github.com/futurenda/google-auth-id-token-verifier",
     "github.com/gin-contrib/cors",
     "github.com/gin-gonic/gin",
     "github.com/go-redis/redis",
     "github.com/gobuffalo/packr",
     "github.com/jmoiron/sqlx",
     "github.com/lib/pq",
-    "github.com/markbates/goth",
-    "github.com/markbates/goth/gothic",
-    "github.com/markbates/goth/providers/google",
     "github.com/rubenv/sql-migrate",
     "gopkg.in/dgrijalva/jwt-go.v3",
   ]
