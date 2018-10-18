@@ -69,12 +69,6 @@
   go-tests = true
   unused-packages = true
 
-
-
-[[constraint]]
-  name = "github.com/markbates/goth"
-  version = "1.47.0"
-
 [[constraint]]
   branch = "master"
   name = "github.com/futurenda/google-auth-id-token-verifier"
