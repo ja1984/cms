@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
+	"net/http"
 	"time"
 
 	ginjwt "github.com/appleboy/gin-jwt"
@@ -16,9 +16,6 @@ import (
 	"github.com/ja1984/cogCMS/backend/routes"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
-	"github.com/markbates/goth/providers/google"
 	migrate "github.com/rubenv/sql-migrate"
 	jwt "gopkg.in/dgrijalva/jwt-go.v3"
 )
@@ -41,6 +38,10 @@ type User struct {
 	UserName  string
 	FirstName string
 	LastName  string
+}
+
+type GoogleAuthRequst struct {
+	Token string `json:"token"`
 }
 
 var identityKey = "id"
@@ -78,7 +79,7 @@ func main() {
 	runDatabaseMigrations()
 
 	authHandler := setupAuthMiddleware()
-	setupGoth()
+	// setupGoth()
 
 	r := gin.Default()
 
@@ -99,21 +100,42 @@ func main() {
 		apiGroup.GET("auth/refresh_token", authHandler.RefreshHandler)
 		apiGroup.POST("auth/login", authHandler.LoginHandler)
 
-		apiGroup.GET("auth/google", func(c *gin.Context) {
-			queryString := c.Request.URL.Query()
-			queryString.Add("provider", "google")
-			c.Request.URL.RawQuery = queryString.Encode()
-			gothic.BeginAuthHandler(c.Writer, c.Request)
-		})
+		apiGroup.POST("auth/google", func(c *gin.Context) {
+			var reqest GoogleAuthRequst
+			err := c.BindJSON(&reqest)
 
-		apiGroup.GET("auth/google/callback", func(c *gin.Context) {
-			user, err := gothic.CompleteUserAuth(c.Writer, c.Request)
 			if err != nil {
-				fmt.Fprintln(c.Writer, err)
+				log.Printf("Couldnt bind json auth/google, err: %v", err)
+			}
+
+			data := User{
+				UserName:  "1",
+				LastName:  "Pata",
+				FirstName: "Data",
+			}
+
+			// Create the token
+			token := jwt.New(jwt.GetSigningMethod(authHandler.SigningAlgorithm))
+			claims := token.Claims.(jwt.MapClaims)
+
+			if authHandler.PayloadFunc != nil {
+				for key, value := range authHandler.PayloadFunc(data) {
+					claims[key] = value
+				}
+			}
+
+			expire := authHandler.TimeFunc().Add(authHandler.Timeout)
+			claims["exp"] = expire.Unix()
+			claims["orig_iat"] = authHandler.TimeFunc().Unix()
+			tokenString, err := token.SignedString(authHandler.Key)
+
+			if err != nil {
+				c.Error(ginjwt.ErrFailedTokenCreation)
+				c.Status(http.StatusUnauthorized)
 				return
 			}
 
-			log.Printf("User: %v", user)
+			authHandler.LoginResponse(c, http.StatusOK, tokenString, time.Now())
 		})
 
 		r.NoRoute(authHandler.MiddlewareFunc(), func(c *gin.Context) {
@@ -224,7 +246,7 @@ func setupAuthMiddleware() *ginjwt.GinJWTMiddleware {
 		// - "query:<name>"
 		// - "cookie:<name>"
 		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup: "header: Authorization",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 
@@ -238,8 +260,8 @@ func setupAuthMiddleware() *ginjwt.GinJWTMiddleware {
 	return authMiddleware
 }
 
-func setupGoth() {
-	goth.UseProviders(
-		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:5000/auth/google/callback"),
-	)
-}
+// func setupGoth() {
+// 	goth.UseProviders(
+// 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:5000/auth/google/callback"),
+// 	)
+// }
