@@ -1,24 +1,25 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
+	"time"
 
-	firebase "firebase.google.com/go"
+	ginjwt "github.com/appleboy/gin-jwt"
+	"github.com/futurenda/google-auth-id-token-verifier"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/gobuffalo/packr"
-	"github.com/ja1984/cogCMS/backend/config"
 	"github.com/ja1984/cogCMS/backend/database"
-	"github.com/ja1984/cogCMS/backend/middleware"
 	"github.com/ja1984/cogCMS/backend/routes"
-	"github.com/ja1984/cogCMS/backend/services"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	migrate "github.com/rubenv/sql-migrate"
+	jwt "gopkg.in/dgrijalva/jwt-go.v3"
 )
 
 const (
@@ -29,12 +30,26 @@ const (
 	dbname   = "postgres"
 )
 
+type login struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
+// User demo
+type User struct {
+	UserName  string
+	FirstName string
+	LastName  string
+}
+
+type GoogleAuthRequst struct {
+	Token string `json:"token"`
+}
+
+var identityKey = "id"
+
 func main() {
 	log.Print("Started cms backend 😎")
-
-	if *config.Environment != "local" {
-		setupFirebaseClient()
-	}
 
 	database.REDIS = redis.NewClient(&redis.Options{
 		Addr:     "redis:6379",
@@ -65,6 +80,9 @@ func main() {
 
 	runDatabaseMigrations()
 
+	authHandler := setupAuthMiddleware()
+	// setupGoth()
+
 	r := gin.Default()
 
 	corsConfig := cors.DefaultConfig()
@@ -80,8 +98,72 @@ func main() {
 
 	apiGroup := r.Group("api/v1")
 	{
-		adminGroup := apiGroup.Group("admin", middleware.VerifyAuth())
+		apiGroup.POST("admin/register", routes.RegisterUser)
+		apiGroup.GET("auth/refresh_token", authHandler.RefreshHandler)
+		apiGroup.POST("auth/login", authHandler.LoginHandler)
+
+		apiGroup.POST("auth/google", func(c *gin.Context) {
+			var request GoogleAuthRequst
+			err := c.BindJSON(&request)
+
+			if err != nil {
+				log.Printf("Couldnt bind json auth/google, err: %v", err)
+			}
+
+			v := googleAuthIDTokenVerifier.Verifier{}
+			aud := os.Getenv("GOOGLE_KEY")
+			err = v.VerifyIDToken(request.Token, []string{
+				aud,
+			})
+			if err != nil {
+				log.Printf("Tried verify %s with google aud:%s", request.Token, aud)
+				c.AbortWithError(http.StatusUnauthorized, err)
+				return
+				// claimSet.Iss,claimSet.Email ... (See claimset.go)
+			}
+
+			claimSet, err := googleAuthIDTokenVerifier.Decode(request.Token)
+
+			log.Printf("Claims from google %s", claimSet.Email)
+
+			data := User{
+				UserName:  "1",
+				LastName:  "Pata",
+				FirstName: "Data",
+			}
+
+			// Create the token
+			token := jwt.New(jwt.GetSigningMethod(authHandler.SigningAlgorithm))
+			claims := token.Claims.(jwt.MapClaims)
+
+			if authHandler.PayloadFunc != nil {
+				for key, value := range authHandler.PayloadFunc(data) {
+					claims[key] = value
+				}
+			}
+
+			expire := authHandler.TimeFunc().Add(authHandler.Timeout)
+			claims["exp"] = expire.Unix()
+			claims["orig_iat"] = authHandler.TimeFunc().Unix()
+			tokenString, err := token.SignedString(authHandler.Key)
+
+			if err != nil {
+				c.AbortWithError(http.StatusUnauthorized, err)
+				return
+			}
+
+			authHandler.LoginResponse(c, http.StatusOK, tokenString, time.Now())
+		})
+
+		r.NoRoute(authHandler.MiddlewareFunc(), func(c *gin.Context) {
+			claims := ginjwt.ExtractClaims(c)
+			log.Printf("NoRoute claims: %#v\n", claims)
+			c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		})
+
+		adminGroup := apiGroup.Group("admin")
 		{
+
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
 
@@ -94,25 +176,6 @@ func main() {
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
-}
-
-func setupFirebaseClient() {
-	var err error
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil)
-
-	if err != nil {
-		log.Fatalf("error getting Auth client: %v", err)
-	}
-
-	//Temp stuff just to get it building , need to figure out of we should do with credentails for firebase auth
-	// Think we will just accept all tokens :)
-	client, err := app.Auth(ctx)
-	if err != nil {
-		log.Fatalf("error getting Auth client: %v", err)
-	}
-
-	services.FirebaseClient = client
 }
 
 func runDatabaseMigrations() {
@@ -138,3 +201,84 @@ func runDatabaseMigrations() {
 	}
 	fmt.Printf("Applied %d migrations! 😇\n", n)
 }
+
+func setupAuthMiddleware() *ginjwt.GinJWTMiddleware {
+	// the jwt middleware
+	authMiddleware := &ginjwt.GinJWTMiddleware{
+		Realm:      "test zone",
+		Key:        []byte("secret key"),
+		Timeout:    time.Hour,
+		MaxRefresh: time.Hour,
+		PayloadFunc: func(data interface{}) ginjwt.MapClaims {
+			if v, ok := data.(*User); ok {
+				return ginjwt.MapClaims{
+					identityKey: v.UserName,
+					"firstname": v.FirstName,
+					"lastname":  v.LastName,
+				}
+			}
+			return ginjwt.MapClaims{}
+		},
+		IdentityHandler: func(claims jwt.MapClaims) interface{} {
+			return &User{
+				UserName: claims["id"].(string),
+			}
+		},
+		Authenticator: func(c *gin.Context) (interface{}, error) {
+			var loginVals login
+			if err := c.ShouldBind(&loginVals); err != nil {
+				return "", ginjwt.ErrMissingLoginValues
+			}
+			userID := loginVals.Username
+			password := loginVals.Password
+
+			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
+				return &User{
+					UserName:  userID,
+					LastName:  "Pata",
+					FirstName: "Data",
+				}, nil
+			}
+
+			return nil, ginjwt.ErrFailedAuthentication
+		},
+		Authorizator: func(data interface{}, c *gin.Context) bool {
+			if v, ok := data.(*User); ok && v.UserName == "admin" {
+				return true
+			}
+
+			return false
+		},
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			c.JSON(code, gin.H{
+				"code":    code,
+				"message": message,
+			})
+		},
+		// TokenLookup is a string in the form of "<source>:<name>" that is used
+		// to extract token from the request.
+		// Optional. Default value "header:Authorization".
+		// Possible values:
+		// - "header:<name>"
+		// - "query:<name>"
+		// - "cookie:<name>"
+		// - "param:<name>"
+		TokenLookup: "header: Authorization",
+		// TokenLookup: "query:token",
+		// TokenLookup: "cookie:token",
+
+		// TokenHeadName is a string in the header. Default value is "Bearer"
+		TokenHeadName: "Bearer",
+
+		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
+		TimeFunc: time.Now,
+	}
+
+	return authMiddleware
+}
+
+// func setupGoth() {
+// 	goth.UseProviders(
+// 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:5000/auth/google/callback"),
+// 	)
+// }

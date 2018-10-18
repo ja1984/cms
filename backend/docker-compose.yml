@@ -7,6 +7,9 @@ services:
       - 5000:5000
     volumes:
       - ./:/go/src/github.com/ja1984/cogCMS/backend
+    environment:
+      GOOGLE_KEY: ${GOOGLE_KEY}
+      GOOGLE_SECRET: ${GOOGLE_SECRET}
   redis:
     image: redis
     ports:
