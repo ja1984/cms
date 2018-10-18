@@ -3,21 +3,23 @@
     <div class="login-form">
       <div class="card">
         <div class="card-body">
-          <h1 class="logo">c<i></i>gCMS</h1>
+          <h1 class="logo">c
+            <i></i>gCMS</h1>
           <div class="form-row">
             <label>
               <span class="label-text">Email</span>
-              <input type="text">
+              <input type="text" v-model="userName">
             </label>
           </div>
           <div class="form-row">
             <label>
               <span class="label-text">Password</span>
-              <input type="password">
+              <input type="password" v-model="password">
             </label>
           </div>
           <div class="text-center">
-            <button class="button button-primary">Login</button>
+            <button class="button button-primary" @click="login">Login</button>
+            <button class="button button-primary" @click="loginWithGoogle">Googe</button>
           </div>
         </div>
       </div>
@@ -25,8 +27,33 @@
   </div>
 </template>
 <script>
+
+import { login } from '@/api/auth';
+
 export default {
   name: 'Login',
+  data() {
+    return {
+      userName: '',
+      password: '',
+    };
+  },
+  methods: {
+    login() {
+      login({ userName: this.userName, password: this.password }).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    loginWithGoogle() {
+      this.$gAuth.signIn((user) => {
+        console.log(user.getAuthResponse().id_token);
+      }, (error) => {
+        console.log(error);
+      });
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
