@@ -9,6 +9,7 @@
             <th>Name</th>
             <th>Status</th>
             <th>Created</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -19,6 +20,10 @@
             </td>
             <td>{{page.published}}</td>
             <td>{{page.created}}</td>
+            <td>
+              <router-link :to=" {name: 'editpage', params: {id: page.id}}">Edit</router-link>
+
+            </td>
           </tr>
         </tbody>
       </table>

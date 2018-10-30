@@ -28,7 +28,7 @@
 </template>
 <script>
 
-import { login } from '@/api/auth';
+import { login, validate } from '@/api/auth';
 
 export default {
   name: 'Login',
@@ -48,6 +48,9 @@ export default {
     },
     loginWithGoogle() {
       this.$gAuth.signIn((user) => {
+        validate(user.getAuthResponse().id_token).then((res) => {
+          console.log(res);
+        });
         console.log(user.getAuthResponse().id_token);
       }, (error) => {
         console.log(error);

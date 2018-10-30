@@ -76,7 +76,8 @@
               </div>
               <div class="addNewField" v-if="newTemplateField !== null">
                 <field-type :canBeDeleted="false" :id="newTemplateField.id" :key="newTemplateField.id" v-model="newTemplateField.data" :type="newTemplateField.type"></field-type>
-                <button class="button button-primary" @click="saveNewField">Add field</button> <button class="button button-link margin margin-left-1" @click="newTemplateField = null">Cancel</button>
+                <button class="button button-primary" @click="saveNewField">Add field</button>
+                <button class="button button-link margin margin-left-1" @click="newTemplateField = null">Cancel</button>
               </div>
             </section>
             <section v-show="selectedTab === 'Pretty'">
@@ -148,7 +149,7 @@ export default {
   data() {
     return {
       selectedTemplate: null,
-      id: createId(),
+      id: null,
       name: '',
       slug: '',
       fields: [],
@@ -163,8 +164,45 @@ export default {
     };
   },
   mounted() {
-    const template = this.$store.getters['template/byId'](this.$route.params.id);
-    this.selectedTemplate = template;
+    console.log('WATCVH!');
+    if (this.$route.name === 'editpage') {
+      const page = this.$store.getters['page/byId'](this.$route.params.id);
+      if (!page) return;
+
+      console.log('PAGE', page);
+      this.name = page.name;
+      this.id = page.id;
+      this.slug = page.slug;
+
+      //       childFields: Array(0)
+      // id: "f8db"
+      // name: "test"
+      // options: Array(0)
+      // required: false
+      // slug: "test"
+      // tooltip: ""
+      // type: "input"
+      // value: "test"
+
+      page.fields.forEach((field) => {
+        this.fields.push(this.createField({
+          type: field.type,
+          data: {
+            name: field.name,
+            type: field.type,
+            required: field.required,
+            tooltip: field.tooltip,
+            options: field.options,
+            slug: field.slug,
+          },
+        }, field.value, [], field.id));
+      });
+      // this.selectedTemplate =
+      // EDIT!!!;
+    } else {
+      const template = this.$store.getters['template/byId'](this.$route.params.id);
+      this.selectedTemplate = template;
+    }
     // if (template) {
     //   this.setup(template);
     // }
@@ -258,9 +296,6 @@ export default {
         const childValue = childField.type === 'boolean' ? false : null;
         return this.createField(childField, childValue, [], createId());
       });
-
-      console.log('childFields', childFields, template.data.childFields);
-
       this.childFields.push({
         id: repeater.id,
         fields: childFields,
@@ -318,31 +353,39 @@ export default {
         .replace(/-+$/, '');
     },
     createPage(published) {
-      this.$store.dispatch('page/create', {
-        id: this.id,
-        name: this.name,
-        slug: this.slug,
-        fields: this.fields,
-        created: new Date(),
-        published,
-      });
-
       const page = {
         id: this.id,
         name: this.name,
         slug: this.slug,
         fields: this.fields,
+        created: new Date(),
+        template: this.$route.params.id,
+        published,
       };
-      createPage(page).then((response) => {
-        if (response.status === 201) {
-          this.$store.dispatch('page/create', {
-            id: this.id,
-            name: this.name,
-            slug: this.slug,
-            fields: this.fields,
-          });
-        }
-      });
+
+      if (this.id !== null) {
+        this.$store.dispatch('page/update', page);
+      } else {
+        page.id = createId();
+        this.$store.dispatch('page/create', page);
+      }
+
+      // const page = {
+      //   id: this.id,
+      //   name: this.name,
+      //   slug: this.slug,
+      //   fields: this.fields,
+      // };
+      // createPage(page).then((response) => {
+      //   if (response.status === 201) {
+      //     this.$store.dispatch('page/create', {
+      //       id: this.id,
+      //       name: this.name,
+      //       slug: this.slug,
+      //       fields: this.fields,
+      //     });
+      //   }
+      // });
     },
   },
   watch: {
