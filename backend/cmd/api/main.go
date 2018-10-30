@@ -163,6 +163,7 @@ func main() {
 
 		adminGroup := apiGroup.Group("admin")
 		{
+			adminGroup.POST("site", routes.CreateSite) //TODO: build middleware so it check the user is in a team for the site etc.
 
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
