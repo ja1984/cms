@@ -14,13 +14,14 @@ type Request struct {
 	Data Page `json:"Data"`
 }
 type Page struct {
-	ID        string  `json:"id"`
-	Name      string  `json:"name"`
-	Fields    []Field `json:"fields"`
-	Created   string  `json:"created"`
-	Updated   string  `json:"updated"`
-	Template  string  `json:"template"`
-	Published bool    `json:"published"`
+	ID            string  `json:"id"`
+	Name          string  `json:"name"`
+	Fields        []Field `json:"fields"`
+	Created       string  `json:"created"`
+	Updated       string  `json:"updated"`
+	Template      string  `json:"template"`
+	Published     bool    `json:"published"`
+	EnvironmentID int     `json:"environment_id"`
 }
 
 type Field struct {
