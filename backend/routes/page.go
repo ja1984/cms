@@ -8,15 +8,19 @@ import (
 	"github.com/ja1984/cogCMS/backend/database"
 )
 
-const pagePath = "page:%s:%s"
+const pagePath = "page:%s"
 
 type Request struct {
 	Data Page `json:"Data"`
 }
 type Page struct {
-	ID     string  `json:"id"`
-	Name   string  `json:"name"`
-	Fields []Field `json:"fields"`
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Fields    []Field `json:"fields"`
+	Created   string  `json:"created"`
+	Updated   string  `json:"updated"`
+	Template  string  `json:"template"`
+	Published bool    `json:"published"`
 }
 
 type Field struct {
@@ -49,7 +53,7 @@ func GetPages(c *gin.Context) {
 	for {
 		var keys []string
 		var err error
-		keys, cursor, err = database.REDIS.Scan(0, "page:*:*", 0).Result()
+		keys, cursor, err = database.REDIS.Scan(0, "page:*", 0).Result()
 		if err != nil {
 			c.AbortWithError(500, err)
 		}
@@ -100,5 +104,5 @@ func savePage(page Page) error {
 		return err
 	}
 
-	return database.REDIS.Set(fmt.Sprintf(pagePath, page.ID, page.Name), pageJSON, 0).Err()
+	return database.REDIS.Set(fmt.Sprintf(pagePath, page.ID), pageJSON, 0).Err()
 }

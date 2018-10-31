@@ -358,7 +358,7 @@ export default {
         name: this.name,
         slug: this.slug,
         fields: this.fields,
-        created: new Date(),
+        updated: new Date(),
         template: this.$route.params.id,
         published,
       };
@@ -367,6 +367,7 @@ export default {
         this.$store.dispatch('page/update', page);
       } else {
         page.id = createId();
+        page.created = new Date();
         this.$store.dispatch('page/create', page);
       }
 

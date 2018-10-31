@@ -1,6 +1,6 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 /* eslint no-param-reassign: ["error", { "props": false }] */
-import { getPages } from '@/api/page';
+import { getPages, createPage } from '@/api/page';
 
 // initial state
 const state = {
@@ -16,10 +16,24 @@ const getters = {
 // actions
 const actions = {
   create({ commit }, payload) {
-    commit('create', payload);
+    return new Promise((resolve, reject) => {
+      createPage(payload)
+        .then((response) => {
+          console.log('create page', response);
+          commit('create', payload);
+        })
+        .catch(error => reject(error));
+    });
   },
   update({ commit }, payload) {
-    commit('update', payload);
+    return new Promise((resolve, reject) => {
+      createPage(payload)
+        .then((response) => {
+          console.log('updatre page', response);
+          commit('update', payload);
+        })
+        .catch(error => reject(error));
+    });
   },
   list({ commit }) {
     getPages().then((response) => {
