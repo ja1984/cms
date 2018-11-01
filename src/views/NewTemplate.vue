@@ -109,7 +109,9 @@ export default {
       }
     },
     createTemplate() {
-      this.$store.dispatch('template/create', { id: this.id, name: this.name, fields: this.fields }).then((response) => {
+      const template = { id: this.id, name: this.name, fields: this.fields };
+      console.log(template);
+      this.$store.dispatch('template/create', template).then((response) => {
         this.$router.push({ name: 'templates' });
       });
     },

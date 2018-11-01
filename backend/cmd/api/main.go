@@ -168,6 +168,9 @@ func main() {
 			adminGroup.GET("pages", routes.GetPages)
 			adminGroup.POST("page", routes.CreatePage)
 
+			adminGroup.GET("templates", routes.GetTemplates)
+			adminGroup.POST("template", routes.CreateTemplate)
+
 			adminGroup.POST("collection", routes.CreateCollection)
 			adminGroup.GET("collections", routes.ListCollections)
 			adminGroup.GET("collection/:key", routes.GetCollection)

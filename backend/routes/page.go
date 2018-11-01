@@ -10,7 +10,7 @@ import (
 
 const pagePath = "page:%s"
 
-type Request struct {
+type PageRequest struct {
 	Data Page `json:"Data"`
 }
 type Page struct {
@@ -35,7 +35,7 @@ type Field struct {
 }
 
 func CreatePage(c *gin.Context) {
-	var data Request
+	var data PageRequest
 
 	c.BindJSON(&data)
 
