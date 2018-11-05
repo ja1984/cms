@@ -27,7 +27,7 @@
         <field-selection :disableRepeater="addTo !== null" @addField="addField"></field-selection>
       </div>
       <div class="page-sidebar-footer">
-        <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">Create template</button>
+        <button @click="createTemplate" class="button button-success button-block" :disabled="!canCreate">{{id === null ? 'Create template' : 'Save template'}}</button>
       </div>
     </aside>
   </div>
@@ -47,11 +47,47 @@ export default {
   },
   data() {
     return {
-      id: createId(),
+      id: null,
       name: '',
       fields: [],
       addTo: null,
     };
+  },
+  mounted() {
+    if (this.$route.name === 'edittemplate') {
+      const template = this.$store.getters['template/byId'](this.$route.params.id);
+      if (template) {
+        this.id = template.id;
+        this.name = template.name;
+
+        template.fields.forEach((field) => {
+          console.log(field);
+          const newField = {
+            id: field.id,
+            type: field.type,
+            data: {
+              name: field.data.name,
+              required: field.data.required,
+              tooltip: field.data.tooltip,
+              slug: field.data.slug,
+              options: [],
+              childFields: [],
+            },
+          };
+          console.log('options', field.data.options);
+          field.data.options.forEach((option) => {
+            console.log('PUSH', option);
+            newField.data.options.push({
+              id: option.id,
+              value: option.value,
+            });
+            console.log(newField.data.options);
+          });
+          console.log(newField);
+          this.fields.push(newField);
+        });
+      }
+    }
   },
   computed: {
     canCreate() {
@@ -66,7 +102,8 @@ export default {
         if (field.parentId === null) {
           fields.push({
             field,
-            children: []          });
+            children: [],
+          });
           return;
         }
         const oldField = fields.find(x => x.field.id === field.parentId);
@@ -109,11 +146,22 @@ export default {
       }
     },
     createTemplate() {
-      const template = { id: this.id, name: this.name, fields: this.fields };
-      console.log(template);
-      this.$store.dispatch('template/create', template).then((response) => {
-        this.$router.push({ name: 'templates' });
-      });
+      if (this.id === null) {
+        this.id = createId();
+        const template = { id: this.id, name: this.name, fields: this.fields };
+
+        this.$store.dispatch('template/create', template).then((response) => {
+          this.$router.push({ name: 'templates' });
+        });
+      } else {
+        const template = { id: this.id, name: this.name, fields: this.fields };
+
+        this.$store.dispatch('template/update', template).then((response) => {
+          this.$router.push({ name: 'templates' });
+        });
+      }
+
+
     },
   },
 };
@@ -125,8 +173,6 @@ export default {
 .editor {
   display: flex;
 }
-
-
 
 .divider {
   width: 100%;

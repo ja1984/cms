@@ -26,6 +26,15 @@ const actions = {
         .catch(error => reject(error));
     });
   },
+  update({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      createTemplate(payload)
+        .then((response) => {
+          commit('update', payload);
+        })
+        .catch(error => reject(error));
+    });
+  },
   list({ commit }) {
     getTemplates().then((response) => {
       if (response.status === 200) {
@@ -39,6 +48,13 @@ const actions = {
 const mutations = {
   create(state, data) {
     state.templates.push(data);
+  },
+  update(state, data) {
+    const pageIndex = state.templates.findIndex(x => x.id === data.id);
+    if (pageIndex > -1) {
+      state.templates[pageIndex] = data;
+    }
+    // state.pages.push(data);
   },
   add_templates(state, data) {
     state.templates = data;

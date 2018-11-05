@@ -6,7 +6,7 @@
         <router-link :to="{name: 'createpagefromtemplate', params: {id: template.id}}">
           <div>
             {{template.name}} {{template.fields.length}}
-
+        <router-link :to="{name: 'edittemplate', params :{id: template.id}}">Edit</router-link>
           </div>
 
         </router-link>
@@ -28,7 +28,6 @@
 <script>
 
 import { mapGetters } from 'vuex';
-import { getTemplates } from '@/api/template';
 
 export default {
   name: 'Templates',

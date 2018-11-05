@@ -87,7 +87,12 @@ export default {
   },
   mounted() {
     if (this.type === 'select') {
-      this.newOption();
+      if (this.value.options.length > 0) {
+        this.options = this.value.options;
+        this.update(false);
+      } else {
+        this.newOption();
+      }
     }
   },
   computed: {

@@ -164,26 +164,12 @@ export default {
     };
   },
   mounted() {
-    console.log('WATCVH!');
     if (this.$route.name === 'editpage') {
       const page = this.$store.getters['page/byId'](this.$route.params.id);
       if (!page) return;
-
-      console.log('PAGE', page);
       this.name = page.name;
       this.id = page.id;
       this.slug = page.slug;
-
-      //       childFields: Array(0)
-      // id: "f8db"
-      // name: "test"
-      // options: Array(0)
-      // required: false
-      // slug: "test"
-      // tooltip: ""
-      // type: "input"
-      // value: "test"
-
       page.fields.forEach((field) => {
         this.fields.push(this.createField({
           type: field.type,

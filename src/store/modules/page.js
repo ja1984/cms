@@ -29,7 +29,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       createPage(payload)
         .then((response) => {
-          console.log('updatre page', response);
           commit('update', payload);
         })
         .catch(error => reject(error));
